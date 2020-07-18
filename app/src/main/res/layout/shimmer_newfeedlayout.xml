@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="#fff"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgUserAvt"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:scaleType="centerCrop"
+                android:src="@color/bgshimmer"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#F5F0F0" />
+
+
+            <LinearLayout
+                android:layout_marginLeft="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/txtUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/bgshimmer"
+                    android:minWidth="200dp"
+                    android:textColor="#000"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtTimePost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="120dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/bgshimmer"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+            <ImageButton
+                android:id="@+id/btn_more"
+                android:layout_gravity="top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_black"
+                android:background="@null"/>
+
+
+
+        </LinearLayout>
+        <TextView
+            android:layout_marginHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:id="@+id/txtPostContent"
+            android:textColor="#000"
+            android:textSize="15sp"
+            android:background="@color/bgshimmer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="300dp"
+            />
+
+        <ImageView
+            android:id="@+id/imgPost"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:minHeight="200dp"
+            android:background="@color/bgshimmer"
+            android:adjustViewBounds="true"/>
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#bec3c9"
+            />
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

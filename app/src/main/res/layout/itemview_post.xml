@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="#fff"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:background="@drawable/selector_normal"
+            android:id="@+id/ln_detailpost"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:background="@drawable/selector_normal"
+                android:id="@+id/imgUserAvt"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avt"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#F5F0F0" />
+
+
+            <LinearLayout
+                android:layout_marginLeft="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:fontFamily="@font/lora"
+                    android:background="@drawable/selector_normal"
+                    android:id="@+id/txtUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phan Thanh Tùng"
+                    android:textColor="#000"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:fontFamily="@font/lora"
+                    android:id="@+id/txtTimePost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="vừa xong"
+                    android:layout_marginTop="5dp"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+            <ImageButton
+                android:padding="3dp"
+                android:id="@+id/btn_more"
+                android:layout_gravity="top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_black"
+                android:background="@drawable/selector_oval"/>
+
+        </LinearLayout>
+        <TextView
+            android:fontFamily="@font/lora"
+            android:padding="10dp"
+            android:id="@+id/txtPostContent"
+            android:text="I'm SICT'er"
+            android:textColor="#000"
+            android:textSize="15sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <ImageView
+            android:id="@+id/imgPost"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
+        <LinearLayout
+            android:id="@+id/countlikecmt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:fontFamily="@font/lora"
+                android:paddingHorizontal="10dp"
+                android:gravity="left|center_vertical"
+                android:id="@+id/txt_likes"
+                android:text="2.6k"
+                android:layout_weight="1"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/ic_care_16"
+                android:layout_width="match_parent"
+                android:textSize="14sp"
+                android:layout_height="35dp" />
+            <TextView
+                android:fontFamily="@font/lora"
+                android:paddingHorizontal="10dp"
+                android:gravity="right|center_vertical"
+                android:id="@+id/txt_cmts"
+                android:text="10 bình luận"
+                android:textSize="14sp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"/>
+        </LinearLayout>
+
+
+        <View
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F5F0F0"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:weightSum="2"
+            android:orientation="horizontal">
+            <Button
+                android:fontFamily="@font/lora"
+                android:id="@+id/btn_like"
+                android:paddingLeft="35dp"
+                android:gravity="left|center_vertical"
+                android:drawablePadding="15dp"
+                android:background="@drawable/selector_normal"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:textColor="#707070"
+                android:textStyle="bold"
+                android:text="Thích"
+                android:drawableLeft="@drawable/ic_like_dark"
+                />
+            <Button
+                android:fontFamily="@font/lora"
+                android:id="@+id/btn_cmt"
+                android:paddingLeft="35dp"
+                android:gravity="left|center_vertical"
+                android:drawablePadding="15dp"
+                android:background="@drawable/selector_normal"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:text="Bình luận"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:textColor="#707070"
+                android:textStyle="bold"
+                android:drawableLeft="@drawable/ic_comment1_dark"/>
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#D1D5DA"
+            />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

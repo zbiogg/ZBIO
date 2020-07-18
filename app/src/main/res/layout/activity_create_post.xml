@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.CreatePost">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:padding="10dp"
+            android:id="@+id/btnback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_oval"
+            android:src="@drawable/ic_arrow_back_black_24dp" />
+        <TextView
+            android:gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Tạo bài viết"
+            android:textSize="18sp"
+            android:textColor="#000"/>
+        <Button
+            android:id="@+id/btn_post_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ĐĂNG"
+            android:background="@null"
+            android:textColor="#C5BBBB"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp"
+            android:layout_gravity="end" />
+    </androidx.appcompat.widget.Toolbar>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/bgshimmer"/>
+    <ScrollView
+        android:layout_marginBottom="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imgUserAvt"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/avt"
+                    app:civ_fill_color="@color/bgshimmer"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="#F5F0F0" />
+
+
+                <LinearLayout
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txtUserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minWidth="200dp"
+                        android:text="Phan Thanh Tùng"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <Button
+                        android:layout_marginTop="2dp"
+                        android:paddingLeft="3dp"
+                        android:paddingRight="3dp"
+                        android:drawableLeft="@drawable/ic_globe"
+                        android:drawableRight="@drawable/ic_keyboard_arrow_down_black_24dp"
+                        android:drawablePadding="3dp"
+                        android:background="@drawable/button_radius_10dp"
+                        android:gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:paddingVertical="2dp"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:text="Công khai"/>
+
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+            <EditText
+                android:id="@+id/edit_post_content"
+                android:background="@null"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Bạn đang nghĩ gì?"
+                android:textSize="24sp"/>
+            <ImageView
+                android:id="@+id/img_post_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@null"
+                android:adjustViewBounds="true"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    </LinearLayout>
+   <LinearLayout
+       android:layout_alignParentBottom="true"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical">
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="1dp"
+           android:background="@color/bgshimmer"/>
+    <LinearLayout
+        android:padding="10dp"
+        android:background="#FAFAFA"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="10"
+        android:gravity="bottom">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Thêm vào bài viết của bạn"
+            android:textSize="16sp"
+            android:layout_weight="7"/>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_weight="3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+        <ImageButton
+            android:padding="10dp"
+            android:id="@+id/btn_image"
+            android:layout_width="wrap_content"
+            android:background="@drawable/selector_normal"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_image_add"/>
+        <ImageButton
+            android:padding="10dp"
+            android:id="@+id/btn_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_normal"
+            android:src="@drawable/ic_ar_camera"/>
+        </LinearLayout>
+
+
+
+        </LinearLayout>
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="1dp"
+           android:background="@color/bgshimmer"/>
+   </LinearLayout>
+</RelativeLayout>

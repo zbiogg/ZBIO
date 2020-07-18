@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/adamina</item>
+        <item>@font/amiko</item>
+        <item>@font/arsenal</item>
+        <item>@font/arvo</item>
+        <item>@font/trocchi</item>
+    </array>
+</resources>

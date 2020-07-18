@@ -1,0 +1,97 @@
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgUserAvt"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avt"
+            app:civ_fill_color="@color/bgshimmer"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#F5F0F0" />
+
+
+        <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/txtUserName"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:minWidth="200dp"
+                android:text="Phan Thanh Tùng"
+                android:textColor="#000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+           <LinearLayout
+                android:id="@+id/ln_cancel_friend"
+               android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/bgshimmer"
+                android:text="Hủy yêu cầu"
+                android:textColor="#5C5151"
+                android:textStyle="bold"
+                android:textAllCaps="false"/>
+        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ln_option_friend"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+                <Button
+                    android:elevation="0dp"
+                    android:id="@+id/btn_add_friend"
+                    android:layout_marginVertical="2dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_submit_friend"
+                    android:text="Thêm bạn bè"
+                    android:textColor="#fff"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"/>
+                <Button
+                    android:elevation="0dp"
+                    android:id="@+id/btn_remove"
+                    android:layout_marginVertical="2dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_remove_friend"
+                    android:text="Xóa"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</LinearLayout>

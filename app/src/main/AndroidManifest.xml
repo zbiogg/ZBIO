@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tungkon.zbio">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Activity.EditPostActivity"></activity>
+        <activity android:name=".Activity.MyProfileActivity" />
+        <activity android:name=".Activity.SearchActivity" />
+        <activity
+            android:name=".Activity.SplashScreen"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activity.ViewProfileActivity" />
+        <activity android:name=".Activity.DetailCmtActivity" />
+        <activity
+            android:name=".Activity.DetailPostActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".Activity.MenuItemActivity" />
+        <activity
+            android:name=".Activity.CreatePost"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.DashBoardActivity"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".Activity.MainActivity"
+            android:label="MainActivity" />
+        <activity
+            android:name=".Activity.LoginActivity"
+            android:noHistory="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+    </application>
+
+</manifest>
