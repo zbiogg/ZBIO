@@ -176,8 +176,9 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
                             Log.d("tob", String.valueOf(postObject));
                             Post post = new Gson().fromJson(postObject.get(0).toString(), Post.class);
                             HomeFragment.arrayListposts.add(post);
+//                            HomeFragment.recyclerView.getAdapter().notifyItemInserted(HomeFragment.arrayListposts.size()-1);
                             HomeFragment.recyclerView.getAdapter().notifyDataSetChanged();
-                            HomeFragment.recyclerView.scrollToPosition(HomeFragment.arrayListposts.size()-1);
+//                            HomeFragment.recyclerView.scrollToPosition(HomeFragment.arrayListposts.size()-1);
                             HomeFragment.lnloadingnewpost.setVisibility(View.GONE);
                         }else{
                             Log.d("tob", String.valueOf(object));

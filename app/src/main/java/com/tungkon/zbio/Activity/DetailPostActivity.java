@@ -6,12 +6,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -19,13 +21,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.tungkon.zbio.Adapter.PostCmtAdapter;
@@ -57,6 +62,7 @@ public class DetailPostActivity extends AppCompatActivity {
     PostCmtAdapter cmtAdapter;
     ImageButton btnback,btn_cmt_comfirm;
     Button btn_like,btn_cmt;
+    ImageButton btn_more;
     int postID = 0;
     int post_liked=0;
     NestedScrollView scroll_postdetail;
@@ -64,6 +70,7 @@ public class DetailPostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_post);
+        preferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         scroll_postdetail = findViewById(R.id.scroll_detailpost);
         edit_cmt_content = findViewById(R.id.edit_cmt_content);
         txtUserNameToolbar = findViewById(R.id.txtUserNameToolbar);
@@ -75,6 +82,103 @@ public class DetailPostActivity extends AppCompatActivity {
         imgPost = findViewById(R.id.imgPost);
         txtLikes=findViewById(R.id.txt_likes);
         txtCmts=findViewById(R.id.txt_cmts);
+        btn_more=findViewById(R.id.btn_more);
+        btn_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context contextbs;
+                contextbs=v.getContext();
+                LayoutInflater inflater = (LayoutInflater) contextbs.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                View view = inflater.inflate (R.layout.bottom_sheet_option_post, null);
+                LinearLayout ln_copy_test = (LinearLayout)view.findViewById(R.id.ln_copy_text);
+                LinearLayout ln_copy_link = (LinearLayout)view.findViewById(R.id.ln_copy_link);
+                LinearLayout ln_edit_post = (LinearLayout)view.findViewById(R.id.ln_edit_post);
+                LinearLayout ln_delete_post = (LinearLayout)view.findViewById(R.id.ln_delete_post);
+
+                if(preferences.getInt("id",0)!=getIntent().getExtras().getInt("post_userID")){
+                    ln_edit_post.setVisibility(View.GONE);
+                    ln_delete_post.setVisibility(View.GONE);
+                }
+                BottomSheetDialog dialog = new BottomSheetDialog(contextbs);
+                dialog.setContentView(view);
+                dialog.show();
+                ln_copy_test.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(txtPostContent.getText().toString().equals("")){
+                            Toast.makeText(getApplicationContext(), "Bài viết không có nội dung để sao chép!", Toast.LENGTH_LONG).show();
+                        }else {
+                            ClipboardManager _clipboard = (ClipboardManager) contextbs.getSystemService(Context.CLIPBOARD_SERVICE);
+                            _clipboard.setText(txtPostContent.getText() + "");
+                            Toast.makeText(getApplicationContext(), "Đã sao chép nội dung bài viết vào bộ nhớ tạm", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                ln_copy_link.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ClipboardManager _clipboard = (ClipboardManager) contextbs.getSystemService(Context.CLIPBOARD_SERVICE);
+                        _clipboard.setText("https://zbiogg.com/posts/"+getIntent().getExtras().getInt("postID"));
+                        Toast.makeText(getApplicationContext(), "Đã sao chép liên kết bài viết vào bộ nhớ tạm", Toast.LENGTH_LONG).show();
+                    }
+                });
+                ln_edit_post.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        Intent i = new Intent(getApplicationContext(), EditPostActivity.class);
+                        startActivity(i);
+                    }
+                });
+                ln_delete_post.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        StringRequest request = new StringRequest(Request.Method.POST,"https://zbiogg.com/api/deletePost",response -> {
+                            try {
+                                JSONObject object = new JSONObject(response);
+                                if(object.getBoolean("success")){
+                                    Log.d("possssss",getIntent().getExtras().getInt("post_Position")+"");
+                                    HomeFragment.arrayListposts.remove(getIntent().getExtras().getInt("post_Position"));
+                                    HomeFragment.recyclerView.getAdapter().notifyItemRemoved(getIntent().getExtras().getInt("post_Position"));
+                                    HomeFragment.recyclerView.getAdapter().notifyDataSetChanged();
+                                    finish();
+
+                                    Toast.makeText(getApplicationContext(), "Đã xóa bài viết", Toast.LENGTH_LONG).show();
+
+                                }else{
+                                    Toast.makeText(getApplicationContext(), "Lỗi", Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(), "Lỗi cacth", Toast.LENGTH_LONG).show();
+                            }
+
+                        },error -> {
+                            error.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "Lỗi errror"+error.toString(), Toast.LENGTH_LONG).show();
+                        }){
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                String token = preferences.getString("token","");
+                                HashMap<String, String> map= new HashMap<>();
+                                map.put("Authorization","Bearer "+token);
+                                return map;
+                            }
+
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError {
+                                HashMap<String, String> map= new HashMap<>();
+                                map.put("postID",getIntent().getExtras().getInt("postID")+"");
+                                return map;
+                            }
+                        };
+                        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                        queue.add(request);
+                    }
+                });
+            }
+        });
         btn_like = findViewById(R.id.btn_like);
         btn_cmt = findViewById(R.id.btn_cmt);
         btn_cmt_comfirm = findViewById(R.id.btn_cmt_comfirm);
@@ -89,7 +193,7 @@ public class DetailPostActivity extends AppCompatActivity {
             edit_cmt_content.requestFocus();
         }
         postID =getIntent().getIntExtra("postID",0);
-        preferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+
         recyclerView = findViewById(R.id.rc_view_cmts);
         //
         txtUserNameToolbar.setText((getIntent().getExtras().getString("post_UserName")));
