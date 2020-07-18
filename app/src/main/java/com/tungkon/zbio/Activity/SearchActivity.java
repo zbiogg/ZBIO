@@ -1,11 +1,13 @@
 package com.tungkon.zbio.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -41,6 +43,7 @@ import java.util.Map;
 public class SearchActivity extends AppCompatActivity{
     ImageButton btnback;
     EditText edit_key_search;
+    TextView txt_option_user_search;
     SharedPreferences preferences;
     ArrayList<User> arrayListUser;
     SearchUserAdapter searchUserAdapter;
@@ -51,6 +54,7 @@ public class SearchActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        txt_option_user_search =findViewById(R.id.txt_option_user_search);
         rc_user = findViewById(R.id.rc_view_search_user);
         ln_no_history = findViewById(R.id.ln_no_history);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -84,6 +88,7 @@ public class SearchActivity extends AppCompatActivity{
 
     }
     public void Search(){
+
         arrayListUser = new ArrayList<>();
         String key_search = edit_key_search.getText().toString();
         StringRequest request = new StringRequest(Request.Method.GET,"https://zbiogg.com/api/search?key_search="+key_search,response -> {
@@ -92,15 +97,29 @@ public class SearchActivity extends AppCompatActivity{
                 JSONObject object = new JSONObject(response);
                 if(object.getBoolean("success")){
                     JSONArray users = object.getJSONArray("search_users");
-                    for(int i=0;i<users.length();i++){
-                        User user = new Gson().fromJson(users.get(i).toString(), User.class);
-                        arrayListUser.add(user);
+                    if(users.length()!=0) {
+                        txt_option_user_search.setText("Mọi người");
+                        txt_option_user_search.setTypeface(txt_option_user_search.getTypeface(), Typeface.BOLD  );
+                        for (int i = 0; i < users.length(); i++) {
+                            User user = new Gson().fromJson(users.get(i).toString(), User.class);
+                            arrayListUser.add(user);
+
+                        }
+                        ln_no_history.setVisibility(View.GONE);
+                        searchUserAdapter = new SearchUserAdapter(getApplicationContext(), arrayListUser);
+                        rc_user.setAdapter(searchUserAdapter);
+                        searchUserAdapter.notifyDataSetChanged();
+                    }else{
+                        arrayListUser.clear();
+                        searchUserAdapter = new SearchUserAdapter(getApplicationContext(), arrayListUser);
+                        rc_user.setAdapter(searchUserAdapter);
+                        searchUserAdapter.notifyDataSetChanged();
+                        ln_no_history.setVisibility(View.GONE);
+                        txt_option_user_search.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.lora));
+                        txt_option_user_search.setTypeface(txt_option_user_search.getTypeface(),Typeface.NORMAL);
+                        txt_option_user_search.setText("Không tìm thấy kết quả phù hợp!");
 
                     }
-                    ln_no_history.setVisibility(View.GONE);
-                    searchUserAdapter = new SearchUserAdapter(getApplicationContext(),arrayListUser);
-                    rc_user.setAdapter(searchUserAdapter);
-                    searchUserAdapter.notifyDataSetChanged();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
