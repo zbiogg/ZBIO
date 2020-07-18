@@ -31,10 +31,10 @@ private String doB;
 private String phone;
 @SerializedName("city")
 @Expose
-private Object city;
+private String city;
 @SerializedName("about")
 @Expose
-private Object about;
+private String about;
 @SerializedName("img_avt")
 @Expose
 private String imgAvt;
@@ -56,6 +56,12 @@ private Integer status;
 @SerializedName("auth")
 @Expose
 private Integer auth;
+@SerializedName("mutual_friends")
+@Expose
+private  Integer mutual_friends;
+@SerializedName("status_friend")
+@Expose
+private  Integer status_friend;
 
 public Integer getId() {
 return id;
@@ -121,19 +127,19 @@ public void setPhone(String phone) {
 this.phone = phone;
 }
 
-public Object getCity() {
+public String getCity() {
 return city;
 }
 
-public void setCity(Object city) {
+public void setCity(String city) {
 this.city = city;
 }
 
-public Object getAbout() {
+public String getAbout() {
 return about;
 }
 
-public void setAbout(Object about) {
+public void setAbout(String about) {
 this.about = about;
 }
 
@@ -191,6 +197,22 @@ return auth;
 
 public void setAuth(Integer auth) {
 this.auth = auth;
+}
+
+public  Integer getMutual_friends(){
+    return  mutual_friends;
+}
+
+public void setMutual_friends(Integer mutual_friends){
+    this.mutual_friends = mutual_friends;
+}
+
+public  Integer getStatus_friend(){
+    return  status_friend;
+}
+
+public void  setStatus_friend(Integer status_friend){
+    this.status_friend = status_friend;
 }
 
 }

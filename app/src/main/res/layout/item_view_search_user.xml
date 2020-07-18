@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:id="@+id/ln_view_profile"
+    android:background="@drawable/selector_normal"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <LinearLayout
-        android:padding="10dp"
+        android:weightSum="10"
+        android:padding="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgUserAvt"
             android:layout_gravity="center"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/avt"/>
         <LinearLayout
-            android:layout_marginLeft="10dp"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_weight="9"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <TextView
+                android:fontFamily="@font/lora"
+                android:id="@+id/txtUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Phan Thanh Tùng"
@@ -27,23 +38,52 @@
                 android:textColor="#1C1B1B"
                 android:textSize="18sp"/>
             <TextView
-                android:textSize="12sp"
+                android:fontFamily="@font/lora"
+                android:id="@+id/txt_friend_status"
+                android:textSize="14sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Bạn bè"
                 />
             <TextView
-                android:textSize="12sp"
+                android:fontFamily="@font/lora"
+                android:id="@+id/txtcity"
+                android:textSize="14sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Đến từ Quảng Bình"
-                android:textColor="#201C1C"
+                android:textColor="#1E1C1C"
                 />
         </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center">
+                <ImageButton
+                    android:id="@+id/btn_message"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/selector_oval"
+                    android:src="@drawable/ic_messenger"/>
+                <ImageButton
+                    android:id="@+id/btn_add_friend"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/selector_oval"
+                    android:src="@drawable/ic_add_friend"/>
+            </LinearLayout>
+    </LinearLayout>
+
     </LinearLayout>
     <View
         android:layout_marginHorizontal="10dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#000"/>
+        android:background="@color/bgshimmer"/>
 </LinearLayout>

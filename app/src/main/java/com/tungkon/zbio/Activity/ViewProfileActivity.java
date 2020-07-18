@@ -82,7 +82,8 @@ public class ViewProfileActivity extends AppCompatActivity {
 
                 JSONObject object = new JSONObject(response);
                 if(object.getBoolean("success")){
-                    JSONObject user = object.getJSONObject("user");
+                    JSONArray userarray = object.getJSONArray("user");
+                    JSONObject user = userarray.getJSONObject(0);
                     JSONArray posts = object.getJSONArray("data");
                     Log.d("test123", String.valueOf(posts));
                     int likeqty = 0;
