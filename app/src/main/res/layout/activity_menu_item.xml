@@ -91,6 +91,58 @@
 
 
             </LinearLayout>
+            <LinearLayout
+                android:clickable="true"
+                android:id="@+id/ln_view_about_us"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/aboutus"
+                    app:civ_fill_color="@color/bgshimmer"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="#F5F0F0" />
+
+
+                <LinearLayout
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minWidth="200dp"
+                        android:text="ABOUT ZBIOGG"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:paddingLeft="3dp"
+                        android:paddingRight="3dp"
+                        android:gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:paddingVertical="2dp"
+                        android:textSize="13sp"
+                        android:text="Xem giới thiệu về ZBIOGG"/>
+
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
             <Button
                 android:id="@+id/btnlogout"
                 android:background="@drawable/button_register_background"

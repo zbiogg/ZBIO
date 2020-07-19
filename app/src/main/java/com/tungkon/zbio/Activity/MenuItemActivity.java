@@ -36,7 +36,7 @@ public class MenuItemActivity extends AppCompatActivity {
     ProgressDialog dialog;
     ImageView imgUserAvt;
     TextView txtUserName;
-    LinearLayout lnviewprofile;
+    LinearLayout lnviewprofile,lnviewaboutus;
     FragmentManager fragmentManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +48,18 @@ public class MenuItemActivity extends AppCompatActivity {
         btnback =findViewById(R.id.btnback);
         fragmentManager = getSupportFragmentManager();
         lnviewprofile = findViewById(R.id.lnviewprofile);
+        lnviewaboutus = findViewById(R.id.ln_view_about_us);
         lnviewprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MenuItemActivity.this,MyProfileActivity.class);
                 startActivity(i);
+            }
+        });
+        lnviewaboutus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MenuItemActivity.this,AboutUsActivity.class));
             }
         });
         preferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
