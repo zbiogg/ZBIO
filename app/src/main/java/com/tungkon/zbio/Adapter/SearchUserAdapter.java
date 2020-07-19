@@ -59,15 +59,25 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
         User user = arrayListUser.get(position);
         Picasso.get().load("https://zbiogg.com/img/avt/"+user.getImgAvt()).into(holder.imgUserAvt);
         holder.txtUserName.setText(user.getLastName()+" "+user.getFirstName());
-        if(user.getStatus_friend()==1){
-            holder.txt_friend_status.setText("Bạn bè ( "+user.getMutual_friends()+" bạn chung )");
-            holder.btn_message.setVisibility(View.VISIBLE);
-            holder.btn_add_friend.setVisibility(View.GONE);
-        }else{
-            holder.txt_friend_status.setText(user.getMutual_friends()+" bạn chung");
-            holder.btn_message.setVisibility(View.GONE);
-            holder.btn_add_friend.setVisibility(View.VISIBLE);
+
+        switch (user.getStatus_friend()){
+            case 0:
+                holder.btn_message.setVisibility(View.GONE);
+                holder.btn_add_friend.setVisibility(View.GONE);
+                break;
+            case 1:
+                holder.txt_friend_status.setText("Bạn bè ( "+user.getMutual_friends()+" bạn chung )");
+                holder.btn_message.setVisibility(View.VISIBLE);
+                holder.btn_add_friend.setVisibility(View.GONE);
+                break;
+            case 4:
+                holder.txt_friend_status.setText(user.getMutual_friends()+" bạn chung");
+                holder.btn_message.setVisibility(View.GONE);
+                holder.btn_add_friend.setVisibility(View.VISIBLE);
+                break;
+
         }
+
         if((user.getCity()+"").equals("null")){
             holder.txt_city.setVisibility(View.GONE);
 //            holder.txt_city.setText("Di động: "+user.getPhone());
@@ -77,7 +87,6 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
         holder.ln_view_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,user.getId()+"",Toast.LENGTH_LONG).show();
                 Intent i = new Intent(context, ViewProfileActivity.class);
                 i.putExtra("userID",user.getId());
                 context.startActivity(i);
