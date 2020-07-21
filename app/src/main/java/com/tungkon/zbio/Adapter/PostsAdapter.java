@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -48,7 +49,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
+    int image_Qty=0;
+    int image_success= 0;
     Context context;
     ArrayList<Post> postArrayList;
     LinearLayout lnfirst,lnnormal;
@@ -64,11 +69,16 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     @Override
 
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater =LayoutInflater.from(context);
+        LayoutInflater layoutInflater =LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.itemview_post,parent,false);
         context=parent.getContext();
         lnnormal = view.findViewById(R.id.lnnormal);
-        preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences("user", MODE_PRIVATE);
+        view.setVisibility(View.GONE);
+        SharedPreferences load_image = context.getSharedPreferences("load_image",MODE_PRIVATE);
+        if(load_image.getBoolean("success",false)){
+            view.setVisibility(View.VISIBLE);
+        }
         return new ViewHolder(view);
     }
 
@@ -109,7 +119,29 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 }
             });
             if(!String.valueOf(post.getPostImage()).equals("null")){
-                Picasso.get().load("https://zbiogg.com/img/posts/" + post.getPostImage()).placeholder(R.color.bgshimmer).into(holder.imgPost);
+                image_Qty++;
+                Picasso.get().load("https://zbiogg.com/img/posts/" + post.getPostImage())
+                        .placeholder(R.color.bgshimmer).into(holder.imgPost,new com.squareup.picasso.Callback(){
+
+                    @Override
+                    public void onSuccess() {
+                        image_success++;
+                        Log.d("checkimageloadsuccess","so luong: "+image_Qty+"thanh cong"+image_success);
+                        if(image_Qty==image_success){
+                            SharedPreferences load_image = context.getSharedPreferences("load_image",MODE_PRIVATE);
+                            SharedPreferences.Editor editor = load_image.edit();
+                            editor.putBoolean("success",true);
+                            editor.apply();
+                            HomeFragment fragment = new HomeFragment();
+                            fragment.onPause();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
             }
 
             if (post.getLikeQty() > 0) {
@@ -305,9 +337,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                                 try {
                                     JSONObject object = new JSONObject(response);
                                     if(object.getBoolean("success")){
-                                        postArrayList.remove(position);
+//                                        postArrayList.remove(position);
                                         notifyItemRemoved(position);
-                                        holder.itemView.setVisibility(View.GONE);
                                         Toast.makeText(context, "Đã xóa bài viết", Toast.LENGTH_LONG).show();
 
                                     }

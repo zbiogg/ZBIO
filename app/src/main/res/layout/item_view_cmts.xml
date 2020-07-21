@@ -3,15 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:paddingBottom="2dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="#fff"
     >
-
-
         <LinearLayout
             android:paddingHorizontal="10dp"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -89,6 +87,24 @@
 
             </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:background="@drawable/selector_normal"
+        android:id="@+id/ln_view_detail_cmt"
+        android:paddingHorizontal="75dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp">
+        <TextView
+            android:id="@+id/txt_view_all_repcmt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xem 10 phản hồi"
+            android:fontFamily="@font/lora"
+            android:textColor="#1c1e21"
+            android:textStyle="bold"
+            android:textSize="13sp"/>
     </LinearLayout>
 </LinearLayout>
 

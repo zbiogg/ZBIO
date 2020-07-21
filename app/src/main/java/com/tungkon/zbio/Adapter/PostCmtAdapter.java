@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -66,8 +67,31 @@ public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHold
         holder.txt_detailcmt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context,DetailCmtActivity.class));
+                Intent i =new Intent(context,DetailCmtActivity.class);
+                i.putExtra("cmtID",cmt.getId());
+                i.putExtra("cmt_UserAvt",cmt.getUserAvt());
+                i.putExtra("cmt_UserName",cmt.getUserfullname());
+                i.putExtra("cmt_CreatedAt",cmt.getCreatedAt());
+                i.putExtra("cmt_Content",cmt.getContentCmt());
+                context.startActivity(i);
 
+            }
+        });
+        if(cmt.getRepcmtQty()>0) {
+            holder.txt_view_all_repcmt.setText("Xem " + cmt.getRepcmtQty() + " câu trả lời...");
+        }else{
+            holder.ln_view_detail_cmt.setVisibility(View.GONE);
+        }
+        holder.ln_view_detail_cmt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i =new Intent(context,DetailCmtActivity.class);
+                i.putExtra("cmtID",cmt.getId());
+                i.putExtra("cmt_UserAvt",cmt.getUserAvt());
+                i.putExtra("cmt_UserName",cmt.getUserfullname());
+                i.putExtra("cmt_CreatedAt",cmt.getCreatedAt());
+                i.putExtra("cmt_Content",cmt.getContentCmt());
+                context.startActivity(i);
             }
         });
     }
@@ -79,7 +103,8 @@ public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imgUserAvt;
-        TextView txtUserName,txtCmtContent,txtTimeCmt,txt_detailcmt;
+        TextView txtUserName,txtCmtContent,txtTimeCmt,txt_detailcmt,txt_view_all_repcmt;
+        LinearLayout ln_view_detail_cmt;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imgUserAvt = (ImageView)itemView.findViewById(R.id.imgUserAvt);
@@ -87,6 +112,8 @@ public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHold
             txtCmtContent = (TextView)itemView.findViewById(R.id.txtCmtContent);
             txtTimeCmt = (TextView)itemView.findViewById(R.id.txtTimeCmt);
             txt_detailcmt = (TextView)itemView.findViewById(R.id.txt_detailcmt);
+            txt_view_all_repcmt=(TextView)itemView.findViewById(R.id.txt_view_all_repcmt);
+            ln_view_detail_cmt=(LinearLayout)itemView.findViewById(R.id.ln_view_detail_cmt);
         }
     }
     private static final int SECOND_MILLIS = 1000;

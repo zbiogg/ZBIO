@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragment.MenuFragment">
+    tools:context=".Fragment.MenuFragment"
+    android:orientation="vertical">
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swpie_home_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_home"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:scrollbars="none">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.facebook.shimmer.ShimmerFrameLayout
+                android:visibility="visible"
                 android:id="@+id/shimmer_view_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -171,14 +172,27 @@
                             android:background="#D1D5DA" />
                     </LinearLayout>
 
-
                     <androidx.recyclerview.widget.RecyclerView
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
                         android:id="@+id/rc_view_posts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+                    <LinearLayout
+                        android:paddingBottom="10dp"
+                        android:background="#D1D5DA"
+                        android:id="@+id/ln_load_more_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+                        <ProgressBar
+                            android:indeterminateDrawable="@drawable/progress_createpost"
+                            android:layout_height="20dp"
+                            android:layout_width="20dp"/>
+                    </LinearLayout>
+
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

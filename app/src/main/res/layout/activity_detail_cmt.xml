@@ -45,12 +45,104 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-
-                <androidx.recyclerview.widget.RecyclerView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/rc_view_cmts"/>
+                    android:orientation="vertical"
+                    android:paddingBottom="2dp"
+                    >
+                    <LinearLayout
+                        android:paddingHorizontal="10dp"
+                        android:paddingTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/imgUserAvt"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/avt"
+                            app:civ_fill_color="@color/bgshimmer"
+                            app:civ_border_width="2dp"
+                            app:civ_border_color="#F5F0F0" />
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+                            <LinearLayout
+                                android:paddingHorizontal="10dp"
+                                android:paddingTop="3dp"
+                                android:paddingBottom="5dp"
+                                android:background="@drawable/border_cmt_backgroud"
+                                android:layout_marginLeft="5dp"
+                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/txtUserName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Phan Thanh Tùng"
+                                    android:textColor="#000"
+                                    android:textSize="14sp"
+                                    android:fontFamily="@font/lora"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txtCmtContent"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Tại anh đã vô tâm hay tại anh không quan tâm em mỗi ngày"
+                                    android:textColor="#1c1e21"
+                                    android:fontFamily="@font/lora"
+                                    android:textSize="16sp"/>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_margin="5dp"
+                                android:paddingHorizontal="10dp"
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/txtTimeCmt"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="3 giờ"
+                                    android:fontFamily="@font/lora"
+                                    android:textStyle="bold"
+                                    android:textSize="12sp"/>
+                                <TextView
+                                    android:background="@drawable/selector_normal"
+                                    android:id="@+id/txt_reply_cmt"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Trả lời"
+                                    android:fontFamily="@font/lora"
+                                    android:textStyle="bold"
+                                    android:textSize="12sp"/>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/rc_view_repcmts"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
@@ -74,7 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imgUserCmtAvt"
+                android:id="@+id/imgUserCurrent"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp"
@@ -84,7 +176,7 @@
                 app:civ_border_width="2dp"
                 app:civ_border_color="#F5F0F0" />
             <EditText
-                android:id="@+id/edit_cmt_content"
+                android:id="@+id/edit_repcmt_content"
                 android:paddingHorizontal="10dp"
                 android:background="@drawable/border_cmt_backgroud"
                 android:layout_width="0dp"

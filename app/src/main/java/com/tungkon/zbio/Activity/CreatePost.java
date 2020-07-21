@@ -163,10 +163,8 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
     private void ConfimPost(){
         finish();
         HomeFragment.lnloadingnewpost.setVisibility(View.VISIBLE);
-        HomeFragment.scroll_home.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                HomeFragment.scroll_home.fullScroll(View.FOCUS_UP);
+        HomeFragment.scroll_home.fullScroll(View.FOCUS_UP);
+        HomeFragment.scroll_home.scrollTo(0,0);
                 StringRequest request = new StringRequest(Request.Method.POST,"https://zbiogg.com/api/posts",response -> {
                     try {
                         JSONObject object = new JSONObject(response);
@@ -175,10 +173,10 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
                             JSONArray postObject = object.getJSONArray("data");
                             Log.d("tob", String.valueOf(postObject));
                             Post post = new Gson().fromJson(postObject.get(0).toString(), Post.class);
-                            HomeFragment.arrayListposts.add(post);
-//                            HomeFragment.recyclerView.getAdapter().notifyItemInserted(HomeFragment.arrayListposts.size()-1);
-                            HomeFragment.recyclerView.getAdapter().notifyDataSetChanged();
-//                            HomeFragment.recyclerView.scrollToPosition(HomeFragment.arrayListposts.size()-1);
+                            HomeFragment.arrayListposts.add(0,post);
+                            HomeFragment.recyclerView.getAdapter().notifyItemInserted(0);
+//                            HomeFragment.recyclerView.getAdapter().notifyDataSetChanged();
+                            HomeFragment.recyclerView.scrollToPosition(0);
                             HomeFragment.lnloadingnewpost.setVisibility(View.GONE);
                         }else{
                             Log.d("tob", String.valueOf(object));
@@ -214,8 +212,7 @@ public class CreatePost extends AppCompatActivity implements View.OnClickListene
                 RequestQueue queue = Volley.newRequestQueue(CreatePost.this);
                 queue.add(request);
             }
-        },500);
-    }
+
 
     private String bitmapToString(Bitmap bitmap){
         if(bitmap!=null){
