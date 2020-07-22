@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,6 +54,7 @@ public class RequestFriendsAdapter extends RecyclerView.Adapter<RequestFriendsAd
         User rq = arrayListRqFriends.get(position);
         Picasso.get().load("https://zbiogg.com/img/avt/"+rq.getImgAvt()).into(holder.imgUserAvt);
         holder.txtUserFullName.setText(rq.getLastName()+" "+rq.getFirstName());
+        holder.txt_mutural_friends.setText(rq.getMutual_friends()+" bạn chung");
         holder.btn_accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +62,7 @@ public class RequestFriendsAdapter extends RecyclerView.Adapter<RequestFriendsAd
                 holder.ln_option_friend.setVisibility(View.GONE);
                 StringRequest requestaccect = new StringRequest(Request.Method.POST,"https://zbiogg.com/api/acceptFriend",response -> {
                     try {
+                        Toast.makeText(context,"oke ne",Toast.LENGTH_SHORT).show();
                         JSONObject objectaccept = new JSONObject(response);
                         if(objectaccept.getBoolean("success")){
                             holder.ln_friend_status.setVisibility(View.VISIBLE);
@@ -85,7 +88,7 @@ public class RequestFriendsAdapter extends RecyclerView.Adapter<RequestFriendsAd
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         HashMap<String, String> map= new HashMap<>();
-                        map.put("receiverID",rq.getId()+"");
+                        map.put("senderID",rq.getId()+"");
                         return map;
                     }
                 };
@@ -145,7 +148,7 @@ public class RequestFriendsAdapter extends RecyclerView.Adapter<RequestFriendsAd
 
     public class ViewHolder extends  RecyclerView.ViewHolder {
         ImageView imgUserAvt;
-        TextView txtUserFullName,txt_friend_status;
+        TextView txtUserFullName,txt_friend_status,txt_mutural_friends;
         Button btn_accept,btn_remove;
         LinearLayout ln_friend_status,ln_option_friend;
 
@@ -158,6 +161,7 @@ public class RequestFriendsAdapter extends RecyclerView.Adapter<RequestFriendsAd
             ln_friend_status = (LinearLayout)itemView.findViewById(R.id.ln_fiend_status);
             ln_option_friend = (LinearLayout)itemView.findViewById(R.id.ln_option_friend);
             txt_friend_status = (TextView)itemView.findViewById(R.id.txt_friend_status);
+            txt_mutural_friends = (TextView)itemView.findViewById(R.id.txt_mutural_friends);
         }
     }
 

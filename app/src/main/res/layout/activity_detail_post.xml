@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="#fff"
     >
+
   <LinearLayout
       android:orientation="vertical"
       android:layout_width="match_parent"
@@ -33,6 +34,10 @@
           android:layout_width="match_parent"
           android:layout_height="3dp"
           android:background="#D1D5DA"/>
+      <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+          android:id="@+id/swpie_detailpost_layout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_detailpost"
         android:scrollbars="none"
@@ -202,6 +207,7 @@
          </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+      </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
   </LinearLayout>
 
     <LinearLayout
@@ -254,7 +260,9 @@
                         android:background="@drawable/selector_oval"
                         android:src="@drawable/ic_send_green"/>
                 </LinearLayout>
+
             </LinearLayout>
+
         </LinearLayout>
 </RelativeLayout>
 

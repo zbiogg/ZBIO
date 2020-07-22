@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <LinearLayout
         android:padding="10dp"
         android:layout_width="match_parent"
@@ -10,40 +11,57 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imgUserAvt"
+        <LinearLayout
             android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avt"
-            app:civ_fill_color="@color/bgshimmer"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#F5F0F0" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_gravity="center_vertical"
+                android:id="@+id/imgUserAvt"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avt"
+                app:civ_fill_color="@color/bgshimmer"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#F5F0F0" />
+        </LinearLayout>
 
 
         <LinearLayout
             android:layout_marginLeft="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1">
 
             <TextView
-                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:id="@+id/txtUserName"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:minWidth="200dp"
                 android:text="Phan Thanh Tùng"
                 android:textColor="#000"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:paddingBottom="4dp"
+                android:id="@+id/txt_mutural_friends"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10 bạn chung" />
+
             <LinearLayout
                 android:id="@+id/ln_fiend_status"
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
+
                 <TextView
                     android:id="@+id/txt_friend_status"
                     android:layout_margin="3dp"
@@ -54,14 +72,15 @@
                     android:text="Các bạn đã là bạn bè"
                     android:textSize="16sp"
                     android:textColor="#5C5151"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/ln_option_friend"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="35dp"
                 android:paddingRight="5dp">
+
                 <Button
                     android:id="@+id/btn_accept"
                     android:layout_marginRight="5dp"
@@ -72,7 +91,8 @@
                     android:text="Chấp nhận"
                     android:textColor="#fff"
                     android:textStyle="bold"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false" />
+
                 <Button
                     android:layout_marginLeft="5dp"
                     android:id="@+id/btn_remove"
@@ -82,10 +102,9 @@
                     android:background="@drawable/button_remove_friend"
                     android:text="Xóa"
                     android:textStyle="bold"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false" />
             </LinearLayout>
         </LinearLayout>
-
 
 
     </LinearLayout>

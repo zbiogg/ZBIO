@@ -4,13 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -43,13 +48,29 @@ public class MyProfileActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private UserPostAdapter userPostAdapter;
     private RecyclerView recyclerView;
-    private ShimmerFrameLayout shimmerFrameLayout1;
+    private ShimmerFrameLayout shimmerFrameLayout;
     private LinearLayout lncity;
+    private SwipeRefreshLayout swiperf_profile;
     private RelativeLayout layoutprofile;
+    private ImageButton btnback,btn_search_toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
+        btnback = findViewById(R.id.btnback);
+        btnback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        btn_search_toolbar = findViewById(R.id.btn_search_toolbar);
+        btn_search_toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),SearchActivity.class));
+            }
+        });
         imgAvt = findViewById(R.id.imgUserAvt);
         imgCover = findViewById(R.id.imgUserCover);
         txtFullName = findViewById(R.id.txtUserName);
@@ -63,7 +84,7 @@ public class MyProfileActivity extends AppCompatActivity {
         txtemail = findViewById(R.id.txtemail);
         txtphone = findViewById(R.id.txtphone);
         lncity = findViewById(R.id.lncity);
-        shimmerFrameLayout1 = findViewById(R.id.shimmer_view_profile);
+        shimmerFrameLayout = findViewById(R.id.shimmer_view_profile);
         layoutprofile = findViewById(R.id.layoutprofle);
         preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -72,9 +93,32 @@ public class MyProfileActivity extends AppCompatActivity {
             Log.d("sfdsfsd","retrerfesd");
         }else{
             Log.d("sfdsfsd","ádsadsa");
-            shimmerFrameLayout1.startShimmer();
+            shimmerFrameLayout.startShimmer();
             getData();
         }
+        swiperf_profile = findViewById(R.id.swpie_profile_layout);
+        swiperf_profile.setColorSchemeColors(Color.parseColor("#6fbe44"));
+        swiperf_profile.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 500ms
+                        swiperf_profile.setRefreshing(false);
+                        shimmerFrameLayout.setVisibility(View.VISIBLE);
+                        shimmerFrameLayout.startShimmer();
+                        getData();
+                    }
+                }, 500);
+
+
+                Log.d("refesh","Done");
+
+
+            }
+        });
 
 
     }
@@ -121,9 +165,9 @@ public class MyProfileActivity extends AppCompatActivity {
 
                     txtemail.setText(preferences.getString("email",""));
                     txtphone.setText(preferences.getString("phone",""));
-                    shimmerFrameLayout1.stopShimmer();
+                    shimmerFrameLayout.stopShimmer();
                     layoutprofile.setVisibility(View.VISIBLE);
-                    shimmerFrameLayout1.setVisibility(View.GONE);
+                    shimmerFrameLayout.setVisibility(View.GONE);
                     userPostAdapter=new UserPostAdapter(getApplicationContext(),arrayListUserPost);
                     recyclerView.setAdapter(userPostAdapter);
                     recyclerView.setHasFixedSize(true);

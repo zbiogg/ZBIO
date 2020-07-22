@@ -42,7 +42,7 @@ public class NotificationFragment extends Fragment {
     NotificationAdapter notificationAdapter;
     ArrayList<Notification> notificationArrayList;
     SharedPreferences preferences;
-    int page=0;
+    int page=2;
     public NotificationFragment() {
         // Required empty public constructor
     }
@@ -65,7 +65,7 @@ public class NotificationFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 if (! recyclerView.canScrollVertically(1)){ //1 for down
                     Toast.makeText(getContext(),"Load more "+page,Toast.LENGTH_SHORT).show();
-                    page++;
+                    LoadMoreNoti();
                 }
             }
         });
@@ -85,6 +85,43 @@ public class NotificationFragment extends Fragment {
                     notificationAdapter = new NotificationAdapter(getContext(),notificationArrayList);
                     recyclerView.setAdapter(notificationAdapter);
                     notificationAdapter.notifyDataSetChanged();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        },error -> {
+            error.printStackTrace();
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                String token = preferences.getString("token","");
+                HashMap<String,String> map = new HashMap<>();
+                map.put("Authorization","Bearer "+token);
+                return map;
+            }
+
+
+        };
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        queue.add(request);
+    }
+    public void LoadMoreNoti(){
+        StringRequest request = new StringRequest(Request.Method.GET,"https://zbiogg.com/api/notification?page="+page,response -> {
+            try {
+                JSONObject object = new JSONObject(response);
+                if(object.getBoolean("success")){
+                    JSONArray notis = object.getJSONArray("notifications");
+                    for(int i=0;i<notis.length();i++){
+                        Notification notification = new Gson().fromJson(notis.get(i).toString(), Notification.class);
+                        notificationArrayList.add(notification);
+                    }
+                    if(notis.length()!=0){
+                        notificationAdapter.notifyItemRangeInserted(notificationArrayList.size(),notis.length());
+                        page++;
+                    }else{
+                        Toast.makeText(getContext(),"Bạn đã xem hết thông báo!",Toast.LENGTH_LONG).show();
+                    }
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

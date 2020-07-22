@@ -33,8 +33,12 @@
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:background="#D1D5DA"/>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swpie_detailcmt_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/scroll_detailpost"
+            android:id="@+id/scroll_detailcmt"
             android:scrollbars="none"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -146,6 +150,7 @@
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -192,7 +197,7 @@
                 android:layout_height="match_parent">
                 <ImageButton
                     android:padding="10dp"
-                    android:id="@+id/btn_cmt_comfirm"
+                    android:id="@+id/btn_repcmt_comfirm"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="@drawable/selector_oval"

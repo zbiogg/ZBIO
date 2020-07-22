@@ -28,6 +28,7 @@ import com.android.volley.toolbox.Volley;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+import com.tungkon.zbio.Activity.AboutUsActivity;
 import com.tungkon.zbio.Activity.LoginActivity;
 import com.tungkon.zbio.Activity.MenuItemActivity;
 import com.tungkon.zbio.Activity.MyProfileActivity;
@@ -49,7 +50,7 @@ import java.util.Map;
  */
 public class MenuFragment extends Fragment {
     private SharedPreferences preferences;
-    private LinearLayout ln_view_profile;
+    private LinearLayout ln_view_profile,lnviewaboutus;
     private Button btn_logout;
     private  ImageView imgUserAvt;
     private  TextView txtUserName;
@@ -63,6 +64,7 @@ public class MenuFragment extends Fragment {
                              Bundle savedInstanceState) {
         View viewprofile = inflater.inflate(R.layout.fragment_menu, container, false);
         ln_view_profile = viewprofile.findViewById(R.id.lnviewprofile);
+        lnviewaboutus = viewprofile.findViewById(R.id.ln_view_about_us);
         btn_logout = viewprofile.findViewById(R.id.btnlogout);
         preferences = getContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         imgUserAvt = viewprofile.findViewById(R.id.imgUserAvtMenu);
@@ -79,6 +81,12 @@ public class MenuFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), MyProfileActivity.class));
+            }
+        });
+        lnviewaboutus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), AboutUsActivity.class));
             }
         });
         btn_logout.setOnClickListener(new View.OnClickListener() {

@@ -99,6 +99,7 @@ public class HomeFragment extends Fragment {
                 if (!scroll_home.canScrollVertically(1)) {
                     lnloadmore.setVisibility(View.VISIBLE);
                     getLoadMore();
+                    Toast.makeText(getContext(),"trang so: "+page,Toast.LENGTH_SHORT).show();
                 }
                 if (!scroll_home.canScrollVertically(-1)) {
                     // top of scroll view
@@ -130,12 +131,21 @@ public class HomeFragment extends Fragment {
         swiperf_home.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                shimmerFrameLayout.setVisibility(View.VISIBLE);
-                shimmerFrameLayout.startShimmer();
-                GetData1();
-                swiperf_home.setRefreshing(false);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 500ms
+                        swiperf_home.setRefreshing(false);
+                        shimmerFrameLayout.setVisibility(View.VISIBLE);
+                        shimmerFrameLayout.startShimmer();
+                        GetData1();
+                    }
+                }, 500);
+
+
                 Log.d("refesh","Done");
-                page=2;
+
 
             }
         });
@@ -179,6 +189,7 @@ public class HomeFragment extends Fragment {
                     postsAdapter=new PostsAdapter(getContext(),arrayListposts);
                     recyclerView.setAdapter(postsAdapter);
                     postsAdapter.notifyDataSetChanged();
+                    page=2;
 
 
 
@@ -213,8 +224,8 @@ public class HomeFragment extends Fragment {
                     arrayListposts.add(post);
                 }
                 if(posts.length()!=0){
-                postsAdapter.notifyItemRangeInserted(arrayListposts.size()-10,posts.length());
-                page++;
+                postsAdapter.notifyItemRangeInserted(arrayListposts.size(),posts.length());
+                    page++;
                 }else{
                     lnloadmore.setVisibility(View.GONE);
                     Toast.makeText(getContext(),"Bạn đã xem hết bài viết!",Toast.LENGTH_LONG).show();

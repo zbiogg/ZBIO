@@ -54,6 +54,7 @@ public class SuggestAdapter extends RecyclerView.Adapter<SuggestAdapter.ViewHold
         User sg = arrayListSuggest.get(position);
         Picasso.get().load("https://zbiogg.com/img/avt/"+sg.getImgAvt()).into(holder.imgUserAvt);
         holder.txtUserFullName.setText(sg.getLastName()+" "+sg.getFirstName());
+        holder.txt_mutural_friends.setText(sg.getMutual_friends()+" bạn chung");
         holder.btn_add_friend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,7 +154,7 @@ public class SuggestAdapter extends RecyclerView.Adapter<SuggestAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imgUserAvt;
-        TextView txtUserFullName;
+        TextView txtUserFullName,txt_mutural_friends;
         Button btn_add_friend,btn_remove,btn_cancel_friend;
         LinearLayout ln_cancel_friend,ln_option_friend;
         public ViewHolder(@NonNull View itemView) {
@@ -165,6 +166,7 @@ public class SuggestAdapter extends RecyclerView.Adapter<SuggestAdapter.ViewHold
             btn_cancel_friend = (Button)itemView.findViewById(R.id.btn_cancel);
             ln_cancel_friend = (LinearLayout)itemView.findViewById(R.id.ln_cancel_friend);
             ln_option_friend = (LinearLayout)itemView.findViewById(R.id.ln_option_friend);
+            txt_mutural_friends = (TextView)itemView.findViewById(R.id.txt_mutural_friends);
 
         }
     }

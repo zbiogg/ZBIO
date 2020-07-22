@@ -36,7 +36,7 @@
                 android:text="Phan Thanh Tùng"
                 android:textStyle="bold"
                 android:textColor="#1C1B1B"
-                android:textSize="18sp"/>
+                android:textSize="16sp"/>
             <TextView
                 android:fontFamily="@font/lora"
                 android:id="@+id/txt_friend_status"
@@ -57,9 +57,9 @@
         </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
+                android:layout_width="24dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="right"
                 android:gravity="center">
                 <ImageButton
                     android:id="@+id/btn_message"
@@ -77,6 +77,22 @@
                     android:layout_height="24dp"
                     android:background="@drawable/selector_oval"
                     android:src="@drawable/ic_add_friend"/>
+                <ImageButton
+                    android:id="@+id/btn_add_friend_success"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/selector_oval"
+                    android:src="@drawable/ic_add_friend_success"/>
+                <ImageButton
+                    android:id="@+id/btn_comfirm_friend"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/selector_oval"
+                    android:src="@drawable/ic_reply_friend"/>
             </LinearLayout>
     </LinearLayout>
 

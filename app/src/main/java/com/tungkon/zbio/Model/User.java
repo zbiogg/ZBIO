@@ -62,6 +62,9 @@ private  Integer mutual_friends;
 @SerializedName("status_friend")
 @Expose
 private  Integer status_friend;
+@SerializedName("action_userID")
+@Expose
+private Integer actionUserID;
 
 public Integer getId() {
 return id;
@@ -214,5 +217,12 @@ public  Integer getStatus_friend(){
 public void  setStatus_friend(Integer status_friend){
     this.status_friend = status_friend;
 }
+    public Integer getActionUserID() {
+        return actionUserID;
+    }
+
+    public void setActionUserID(Integer actionUserID) {
+        this.actionUserID = actionUserID;
+    }
 
 }

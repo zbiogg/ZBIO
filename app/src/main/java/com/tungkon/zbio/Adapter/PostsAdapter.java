@@ -32,6 +32,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.squareup.picasso.Picasso;
 import com.tungkon.zbio.Activity.DetailPostActivity;
 import com.tungkon.zbio.Activity.EditPostActivity;
+import com.tungkon.zbio.Activity.MyProfileActivity;
 import com.tungkon.zbio.Activity.ViewProfileActivity;
 import com.tungkon.zbio.Fragment.HomeFragment;
 import com.tungkon.zbio.Model.Post;
@@ -99,13 +100,17 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            holder.txtUserName.setText(post.getUserfullname());
+            holder.txtUserName.setText(post.getUserfullname()+"");
             holder.txtUserName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(context, ViewProfileActivity.class);
-                    i.putExtra("userID",post.getUserID());
-                    context.startActivity(i);
+                    if(post.getUserID()==preferences.getInt("id",0)){
+                        context.startActivity(new Intent(context, MyProfileActivity.class));
+                    }else {
+                        Intent i = new Intent(context, ViewProfileActivity.class);
+                        i.putExtra("userID", post.getUserID());
+                        context.startActivity(i);
+                    }
                 }
             });
             holder.txtPostContent.setText(post.getPostContent());
@@ -113,9 +118,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             holder.imgUserAvt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(context, ViewProfileActivity.class);
-                    i.putExtra("userID",post.getUserID());
-                    context.startActivity(i);
+                    if(post.getUserID()==preferences.getInt("id",0)){
+                        context.startActivity(new Intent(context, MyProfileActivity.class));
+                    }else {
+                        Intent i = new Intent(context, ViewProfileActivity.class);
+                        i.putExtra("userID", post.getUserID());
+                        context.startActivity(i);
+                    }
                 }
             });
             if(!String.valueOf(post.getPostImage()).equals("null")){
@@ -310,7 +319,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                                 ClipboardManager _clipboard = (ClipboardManager) contextbs.getSystemService(Context.CLIPBOARD_SERVICE);
                                 _clipboard.setText(holder.txtPostContent.getText() + "");
                                 Toast.makeText(context, "Đã sao chép nội dung bài viết vào bộ nhớ tạm", Toast.LENGTH_LONG).show();
+
                             }
+                            dialog.dismiss();
                         }
                     });
                     ln_copy_link.setOnClickListener(new View.OnClickListener() {
@@ -319,6 +330,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                             ClipboardManager _clipboard = (ClipboardManager) contextbs.getSystemService(Context.CLIPBOARD_SERVICE);
                             _clipboard.setText("https://zbiogg.com/posts/"+post.getPostID());
                             Toast.makeText(context, "Đã sao chép liên kết bài viết vào bộ nhớ tạm", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
                         }
                     });
                     ln_edit_post.setOnClickListener(new View.OnClickListener() {

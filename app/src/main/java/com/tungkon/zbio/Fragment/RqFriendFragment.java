@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +50,7 @@ public class RqFriendFragment extends Fragment {
     SuggestAdapter suggestAdapter;
     SwipeRefreshLayout swipe_friend;
     ShimmerFrameLayout shimmerFrameLayout;
-    LinearLayout ln_shimmer_rq;
+    LinearLayout ln_shimmer_rq,ln_view_rq_friend;
     int check_load_rq,check_load_sg;
     public RqFriendFragment() {
         // Required empty public constructor
@@ -62,14 +63,25 @@ public class RqFriendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_rq_friend, container, false);
         swipe_friend = view.findViewById(R.id.swpie_rq_layout);
         swipe_friend.setColorSchemeColors(Color.parseColor("#6fbe44"));
+        ln_view_rq_friend = view.findViewById(R.id.ln_view_rq_friend);
         shimmerFrameLayout=view.findViewById(R.id.shimmer_view_request);
 
         swipe_friend.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                shimmerFrameLayout.startShimmer();
+                shimmerFrameLayout.setVisibility(View.VISIBLE);
                 getRequestFriends();
                 getSuggestFriends();
-                swipe_friend.setRefreshing(false);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 500ms
+                        swipe_friend.setRefreshing(false);
+                    }
+                }, 300);
+
                 Log.d("refesh","Done");
 
             }
@@ -107,6 +119,9 @@ public class RqFriendFragment extends Fragment {
                 rc_rqfriend.setHasFixedSize(true);
                 rc_rqfriend.setNestedScrollingEnabled(false);
                 requestFriendsAdapter.notifyDataSetChanged();
+                if(rqs.length()!=0) {
+                    ln_view_rq_friend.setVisibility(View.VISIBLE);
+                }
 //                ShimmerStop();
             } catch (JSONException e) {
                 e.printStackTrace();

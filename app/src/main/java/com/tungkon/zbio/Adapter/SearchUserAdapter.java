@@ -62,8 +62,15 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
 
         switch (user.getStatus_friend()){
             case 0:
-                holder.btn_message.setVisibility(View.GONE);
-                holder.btn_add_friend.setVisibility(View.GONE);
+                if(user.getActionUserID()==user.getId()) {
+                    holder.btn_message.setVisibility(View.GONE);
+                    holder.btn_add_friend.setVisibility(View.GONE);
+                    holder.btn_comfirm_friend.setVisibility(View.VISIBLE);
+                    holder.txt_friend_status.setText(user.getMutual_friends()+" bạn chung");
+                }else{
+                    holder.btn_add_friend_success.setVisibility(View.VISIBLE);
+                    holder.txt_friend_status.setText(user.getMutual_friends()+" bạn chung");
+                }
                 break;
             case 1:
                 holder.txt_friend_status.setText("Bạn bè ( "+user.getMutual_friends()+" bạn chung )");
@@ -108,6 +115,8 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
                     try {
                         JSONObject object = new JSONObject(response);
                         if(object!=null){
+                            holder.btn_add_friend.setVisibility(View.GONE);
+                            holder.btn_add_friend_success.setVisibility(View.VISIBLE);
                             holder.btn_add_friend.setImageResource(R.drawable.ic_add_friend_success);
                         }else{
                             holder.btn_add_friend.setImageResource(R.drawable.ic_add_friend);
@@ -138,6 +147,47 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
                 queue.add(request);
             }
         });
+        holder.btn_comfirm_friend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StringRequest requestaccect = new StringRequest(Request.Method.POST,"https://zbiogg.com/api/acceptFriend",response -> {
+                    try {
+                        JSONObject objectaccept = new JSONObject(response);
+
+                        if(objectaccept.getBoolean("success")){
+
+                            holder.btn_comfirm_friend.setVisibility(View.GONE);
+                            holder.btn_message.setVisibility(View.VISIBLE);
+                        }else{
+                            holder.btn_comfirm_friend.setVisibility(View.VISIBLE);
+                            holder.btn_message.setVisibility(View.GONE);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },error -> {
+                    error.printStackTrace();
+                }){
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        String token = preferences.getString("token","");
+                        HashMap<String, String> map= new HashMap<>();
+                        map.put("Authorization","Bearer "+token);
+                        return map;
+                    }
+
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        HashMap<String, String> map= new HashMap<>();
+                        map.put("senderID",user.getId()+"");
+                        return map;
+                    }
+                };
+                RequestQueue queue = Volley.newRequestQueue(context);
+                queue.add(requestaccect);
+            }
+        });
+
 
     }
 
@@ -149,7 +199,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imgUserAvt;
         TextView txtUserName,txt_friend_status,txt_city;
-        ImageButton btn_message,btn_add_friend;
+        ImageButton btn_message,btn_add_friend,btn_add_friend_success,btn_comfirm_friend;
         LinearLayout ln_view_profile;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -159,6 +209,8 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
             txt_city = (TextView)itemView.findViewById(R.id.txtcity);
             btn_message = (ImageButton)itemView.findViewById(R.id.btn_message);
             btn_add_friend = (ImageButton)itemView.findViewById(R.id.btn_add_friend);
+            btn_add_friend_success = (ImageButton)itemView.findViewById(R.id.btn_add_friend_success);
+            btn_comfirm_friend = (ImageButton)itemView.findViewById(R.id.btn_comfirm_friend);
             ln_view_profile = (LinearLayout)itemView.findViewById(R.id.ln_view_profile);
         }
     }

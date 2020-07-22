@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.content.ClipboardManager;
@@ -12,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,7 @@ import com.tungkon.zbio.Adapter.PostCmtAdapter;
 import com.tungkon.zbio.Fragment.HomeFragment;
 import com.tungkon.zbio.Model.Cmt;
 import com.tungkon.zbio.Model.Post;
+import com.tungkon.zbio.Model.User;
 import com.tungkon.zbio.R;
 
 import org.json.JSONArray;
@@ -63,6 +66,7 @@ public class DetailPostActivity extends AppCompatActivity {
     ImageButton btnback,btn_cmt_comfirm;
     Button btn_like,btn_cmt;
     ImageButton btn_more;
+    SwipeRefreshLayout swpie_detailpost_layout;
     int postID = 0;
     int post_liked=0;
     NestedScrollView scroll_postdetail;
@@ -70,6 +74,28 @@ public class DetailPostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_post);
+        swpie_detailpost_layout = findViewById(R.id.swpie_detailpost_layout);
+        swpie_detailpost_layout.setColorSchemeColors(Color.parseColor("#6fbe44"));
+        swpie_detailpost_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 500ms
+                        swpie_detailpost_layout.setRefreshing(false);
+                        GetCmt();
+                    }
+                }, 500);
+
+
+                Log.d("refesh","Done");
+
+
+            }
+        });
+
         preferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         scroll_postdetail = findViewById(R.id.scroll_detailpost);
         edit_cmt_content = findViewById(R.id.edit_cmt_content);
@@ -196,60 +222,60 @@ public class DetailPostActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.rc_view_cmts);
         //
-        txtUserNameToolbar.setText((getIntent().getExtras().getString("post_UserName")));
-        Picasso.get().load("https://zbiogg.com/img/avt/" +getIntent().getExtras().getString("post_UserAvt")).into(imgUserAvtPost);
+//        txtUserNameToolbar.setText((getIntent().getExtras().getString("post_UserName")));
+//        Picasso.get().load("https://zbiogg.com/img/avt/" +getIntent().getExtras().getString("post_UserAvt")).into(imgUserAvtPost);
         Picasso.get().load("https://zbiogg.com/img/avt/" +preferences.getString("img_avt","")).into(imgUserCmtAvt);
-        Picasso.get().load("https://zbiogg.com/img/posts/" +getIntent().getExtras().getString("post_Image")).into(imgPost);
-        txtUserNamePost.setText(getIntent().getExtras().getString("post_UserName"));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        try {
-            long time = sdf.parse(getIntent().getExtras().getString("post_CreatedAt")).getTime();
-            Date today = new Date(time);
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(today);
-            Log.d("qq", String.valueOf(cal.get(Calendar.YEAR)));
-            txtTimePost.setText(getTimeAgo(time));
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        int cmt_qty=getIntent().getExtras().getInt("post_cmtqty");
-        int like_qty=getIntent().getExtras().getInt("post_likeqty");
-        if (like_qty > 0) {
-            txtLikes.setText(like_qty + "");
-
-        } else {
-            txtLikes.getLayoutParams().height = 0;
-            txtLikes.setLayoutParams(txtLikes.getLayoutParams());
-            txtLikes.setText(null);
-
-        }
-
-        if (cmt_qty> 0) {
-            txtCmts.setText(cmt_qty + " bình luận");
-        } else {
-            txtCmts.getLayoutParams().height = 0;
-            txtCmts.setLayoutParams(txtCmts.getLayoutParams());
-            txtCmts.setText(null);
-
-        }
-        txtPostContent.setText(getIntent().getExtras().getString("post_Content"));
-        txtLikes.setText(getIntent().getExtras().getInt("post_likeqty")+"");
-        txtCmts.setText(getIntent().getExtras().getInt("post_cmtqty")+ " bình luận");
-        post_liked = getIntent().getIntExtra("post_liked",0);
-        if(post_liked==0){
-            btn_like.setTextColor(Color.parseColor("#707070"));
-        }else{
-            btn_like.setTextColor(Color.parseColor("#ff9900"));
-            btn_like.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_care, //left
-                    0, //top
-                    0, //right
-                    0 //bottom
-            );
-            btn_like.setText("Thương thương");
-        }
+//        Picasso.get().load("https://zbiogg.com/img/posts/" +getIntent().getExtras().getString("post_Image")).into(imgPost);
+//        txtUserNamePost.setText(getIntent().getExtras().getString("post_UserName"));
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+//        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        try {
+//            long time = sdf.parse(getIntent().getExtras().getString("post_CreatedAt")).getTime();
+//            Date today = new Date(time);
+//            Calendar cal = Calendar.getInstance();
+//            cal.setTime(today);
+//            Log.d("qq", String.valueOf(cal.get(Calendar.YEAR)));
+//            txtTimePost.setText(getTimeAgo(time));
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        int cmt_qty=getIntent().getExtras().getInt("post_cmtqty");
+//        int like_qty=getIntent().getExtras().getInt("post_likeqty");
+//        if (like_qty > 0) {
+//            txtLikes.setText(like_qty + "");
+//
+//        } else {
+//            txtLikes.getLayoutParams().height = 0;
+//            txtLikes.setLayoutParams(txtLikes.getLayoutParams());
+//            txtLikes.setText(null);
+//
+//        }
+//
+//        if (cmt_qty> 0) {
+//            txtCmts.setText(cmt_qty + " bình luận");
+//        } else {
+//            txtCmts.getLayoutParams().height = 0;
+//            txtCmts.setLayoutParams(txtCmts.getLayoutParams());
+//            txtCmts.setText(null);
+//
+//        }
+//        txtPostContent.setText(getIntent().getExtras().getString("post_Content"));
+//        txtLikes.setText(getIntent().getExtras().getInt("post_likeqty")+"");
+//        txtCmts.setText(getIntent().getExtras().getInt("post_cmtqty")+ " bình luận");
+//        post_liked = getIntent().getIntExtra("post_liked",0);
+//        if(post_liked==0){
+//            btn_like.setTextColor(Color.parseColor("#707070"));
+//        }else{
+//            btn_like.setTextColor(Color.parseColor("#ff9900"));
+//            btn_like.setCompoundDrawablesWithIntrinsicBounds(
+//                    R.drawable.ic_care, //left
+//                    0, //top
+//                    0, //right
+//                    0 //bottom
+//            );
+//            btn_like.setText("Thương thương");
+//        }
         btn_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -338,14 +364,15 @@ public class DetailPostActivity extends AppCompatActivity {
                             Log.d("kaka123",arrayListCmt+"");
                             arrayListCmt.add(cmt);
                             cmtAdapter.notifyItemInserted(cmtAdapter.getItemCount()-1);
-                            cmtAdapter.notifyDataSetChanged();
                             edit_cmt_content.setText("");
-                            ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
-                                    .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+//                            ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+//                                    .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                            recyclerView.scrollToPosition(cmtAdapter.getItemCount()-1);
                             scroll_postdetail.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     scroll_postdetail.fullScroll(View.FOCUS_DOWN);
+                                    edit_cmt_content.requestFocus();
                                 }
                             },500);
                         } catch (JSONException e) {
@@ -384,6 +411,62 @@ public class DetailPostActivity extends AppCompatActivity {
                 JSONObject object = new JSONObject(response);
                 JSONArray cmts = object.getJSONArray("cmts");
                 Log.d("test1", String.valueOf(cmts));
+                Post post = new Gson().fromJson(object.getJSONArray("post").get(0).toString(),Post.class);
+                txtUserNameToolbar.setText(post.getUserfullname());
+                Picasso.get().load("https://zbiogg.com/img/avt/"+post.getUserAvt()).into(imgUserAvtPost);
+                Picasso.get().load("https://zbiogg.com/img/posts/"+post.getPostImage()).into(imgPost);
+                txtUserNamePost.setText(post.getUserfullname());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+                try {
+                    long time = sdf.parse(post.getCreatedAt()).getTime();
+                    Date today = new Date(time);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(today);
+                    Log.d("qq", String.valueOf(cal.get(Calendar.YEAR)));
+                    txtTimePost.setText(getTimeAgo(time));
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                ///////////
+                int cmt_qty=post.getCmtQty();
+                int like_qty=post.getLikeQty();
+                if (like_qty > 0) {
+                    txtLikes.setText(like_qty + "");
+
+                } else {
+                    txtLikes.getLayoutParams().height = 0;
+                    txtLikes.setLayoutParams(txtLikes.getLayoutParams());
+                    txtLikes.setText(null);
+
+                }
+
+                if (cmt_qty> 0) {
+                    txtCmts.setText(cmt_qty + " bình luận");
+                } else {
+                    txtCmts.getLayoutParams().height = 0;
+                    txtCmts.setLayoutParams(txtCmts.getLayoutParams());
+                    txtCmts.setText(null);
+
+                }
+                txtPostContent.setText(post.getPostContent());
+                txtLikes.setText(post.getLikeQty()+"");
+                txtCmts.setText(post.getCmtQty()+ " bình luận");
+                post_liked = post.getLiked();
+                if(post_liked==0){
+                    btn_like.setTextColor(Color.parseColor("#707070"));
+                }else{
+                    btn_like.setTextColor(Color.parseColor("#ff9900"));
+                    btn_like.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_care, //left
+                            0, //top
+                            0, //right
+                            0 //bottom
+                    );
+                    btn_like.setText("Thương thương");
+                }
+                /////////
                 arrayListCmt = new ArrayList<>();
                 for(int i=0;i<cmts.length();i++){
                     JSONObject p = cmts.getJSONObject(i);
