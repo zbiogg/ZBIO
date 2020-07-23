@@ -79,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putString("email",user.getString("email"));
                                 editor.putString("phone",user.getString("phone"));
                                 Log.d("token",object.getString("token"));
-//                                editor.putBoolean("isloggedin",true);
                                 editor.apply();
                                 startActivity(new Intent(LoginActivity.this, DashBoardActivity.class));
                             }

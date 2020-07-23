@@ -152,11 +152,91 @@ public class ViewProfileActivity extends AppCompatActivity {
 
                     }
                     txtUserNameToolbar.setText(user.getString("lastName")+" "+user.getString("firstName"));
+                    btn_add_friend.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            StringRequest request = new StringRequest(Request.Method.POST, "https://zbiogg.com/api/addFriend",response -> {
+                                try {
+                                    JSONObject object = new JSONObject(response);
+                                    if(object!=null){
+                                       btn_add_friend.setVisibility(View.GONE);
+                                       btn_add_success_friend.setVisibility(View.VISIBLE);
+                                    }else{
+                                        btn_add_friend.setVisibility(View.VISIBLE);
+                                        btn_add_success_friend.setVisibility(View.GONE);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            },error -> {
+                                error.printStackTrace();
+                            }){
+                                @Override
+                                public Map<String, String> getHeaders() throws AuthFailureError {
+                                    String token = preferences.getString("token","");
+                                    HashMap<String, String> map= new HashMap<>();
+                                    map.put("Authorization","Bearer "+token);
+                                    return map;
+                                }
+
+                                @Override
+                                protected Map<String, String> getParams() throws AuthFailureError {
+                                    HashMap<String, String> map= new HashMap<>();
+                                    map.put("receiverID",userID+"");
+                                    return map;
+                                }
+                            };
+                            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                            queue.add(request);
+                        }
+                    });
                     switch (user.getInt("status_friend")){
                         case 0:
                             if(user.getInt("action_userID")==user.getInt("id")){
                                 btn_comfirm_friend.setVisibility(View.VISIBLE);
                                 btn_add_friend.setVisibility(View.GONE);
+                                btn_comfirm_friend.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        StringRequest requestaccect = new StringRequest(Request.Method.POST,"https://zbiogg.com/api/acceptFriend",response -> {
+                                            try {
+                                                Toast.makeText(getApplicationContext(),"oke ne",Toast.LENGTH_SHORT).show();
+                                                JSONObject objectaccept = new JSONObject(response);
+                                                if(objectaccept.getBoolean("success")){
+                                                    btn_comfirm_friend.setVisibility(View.GONE);
+                                                    btn_go_to_message.setVisibility(View.VISIBLE);
+                                                    btn_option_friend.setVisibility(View.VISIBLE);
+                                                }else{
+                                                    btn_comfirm_friend.setVisibility(View.VISIBLE);
+                                                    btn_go_to_message.setVisibility(View.GONE);
+                                                    btn_option_friend.setVisibility(View.GONE);
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        },error -> {
+                                            error.printStackTrace();
+                                        }){
+                                            @Override
+                                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                                String token = preferences.getString("token","");
+                                                HashMap<String, String> map= new HashMap<>();
+                                                map.put("Authorization","Bearer "+token);
+                                                return map;
+                                            }
+
+                                            @Override
+                                            protected Map<String, String> getParams() throws AuthFailureError {
+                                                HashMap<String, String> map= new HashMap<>();
+                                                map.put("senderID",userID+"");
+                                                return map;
+                                            }
+                                        };
+                                        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                                        queue.add(requestaccect);
+                                    }
+                                });
                             }else{
                                 btn_add_success_friend.setVisibility(View.VISIBLE);
                                 btn_add_friend.setVisibility(View.GONE);

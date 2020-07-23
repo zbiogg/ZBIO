@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -40,7 +41,7 @@ public class SplashScreen extends AppCompatActivity {
                 checkLogin();
 
             }
-        }, 500);
+        }, 100);
 
     }
     public void checkLogin(){
@@ -65,6 +66,7 @@ public class SplashScreen extends AppCompatActivity {
             }
         },error -> {
             error.printStackTrace();
+            Toast.makeText(getApplicationContext(),"Vui lòng kiểm tra kết nối mạng!",Toast.LENGTH_LONG).show();
         }){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {

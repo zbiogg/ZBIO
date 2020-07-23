@@ -11,12 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.RegisterActivity"></activity>
-        <activity android:name=".Activity.AboutUsActivity" />
-        <activity android:name=".Activity.DetailMessageActivity" />
-        <activity android:name=".Activity.EditPostActivity" />
-        <activity android:name=".Activity.MyProfileActivity" />
-        <activity android:name=".Activity.SearchActivity" />
+        <activity android:name=".Activity.EditAccountActivity"></activity>
+        <activity android:name=".Activity.EditInfoActivity" />
         <activity
             android:name=".Activity.SplashScreen"
             android:noHistory="true">
@@ -26,6 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activity.RegisterActivity" />
+        <activity android:name=".Activity.AboutUsActivity" />
+        <activity android:name=".Activity.DetailMessageActivity" />
+        <activity android:name=".Activity.EditPostActivity" />
+        <activity android:name=".Activity.MyProfileActivity" />
+        <activity android:name=".Activity.SearchActivity" />
         <activity android:name=".Activity.ViewProfileActivity" />
         <activity android:name=".Activity.DetailCmtActivity" />
         <activity
