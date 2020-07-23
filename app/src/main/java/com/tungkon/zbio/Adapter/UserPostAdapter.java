@@ -233,7 +233,7 @@ public class UserPostAdapter extends RecyclerView.Adapter<UserPostAdapter.ViewHo
         ImageView imgPost;
         TextView txt_likes;
         TextView txt_cmts;
-        LinearLayout ln_detailpost;hih
+        LinearLayout ln_detailpost;
         Button btn_like,btn_cmt;
 
         public ViewHolder(@NonNull View itemView) {
