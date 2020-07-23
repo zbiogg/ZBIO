@@ -1,12 +1,14 @@
 package com.tungkon.zbio.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,6 +22,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.textfield.TextInputLayout;
 import com.tungkon.zbio.R;
 
 import org.json.JSONException;
@@ -34,25 +37,52 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog dialog;
     AlertDialog alertDialog;
     SharedPreferences preferences;
+    TextInputLayout usernameinfo,passwordinfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        dialog = new ProgressDialog(LoginActivity.this);
+        dialog.setCancelable(false);
         mBtnLogin = findViewById(R.id.btn_login);
         mBtnRegister = findViewById(R.id.btn_register);
         editusername = findViewById(R.id.edit_login_username);
         editpassword = findViewById(R.id.edit_login_password);
-        dialog = new ProgressDialog(LoginActivity.this);
-        dialog.setCancelable(false);
-        dialog.setMessage("Vui lòng đăng nhập để sử dụng");
-        dialog.show();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                dialog.dismiss();
+        if(getIntent().getExtras()!=null){
+            editusername.setText(getIntent().getExtras().getString("username"));
+            dialog.setMessage("Đăng kí thành công, vui lòng đăng nhập...");
+            dialog.show();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.dismiss();
+                }
+            }, 1000);
+        }
+        Typeface font_lora= ResourcesCompat.getFont(getApplicationContext(), R.font.lora);
+        usernameinfo= (TextInputLayout) findViewById(R.id.usernameinfo);
+        usernameinfo.setTypeface(font_lora);
+        editusername.setTypeface(font_lora);
+        passwordinfo = (TextInputLayout) findViewById(R.id.passwordinfo);
+        passwordinfo.setTypeface(font_lora);
+        editpassword.setTypeface(font_lora);
 
+//        dialog.setMessage("Vui lòng đăng nhập để sử dụng");
+//        dialog.show();
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            public void run() {
+//                dialog.dismiss();
+//
+//            }
+//        }, 1000);
+        mBtnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),RegisterActivity.class));
             }
-        }, 1000);
+        });
         preferences =getSharedPreferences("user", Context.MODE_PRIVATE);
             mBtnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override

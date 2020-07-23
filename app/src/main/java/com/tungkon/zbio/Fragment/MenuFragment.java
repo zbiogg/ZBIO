@@ -1,5 +1,6 @@
 package com.tungkon.zbio.Fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -54,6 +55,7 @@ public class MenuFragment extends Fragment {
     private Button btn_logout;
     private  ImageView imgUserAvt;
     private  TextView txtUserName;
+    private ProgressDialog dialog;
     public MenuFragment() {
         // Required empty public constructor
     }
@@ -89,9 +91,15 @@ public class MenuFragment extends Fragment {
                 startActivity(new Intent(getContext(), AboutUsActivity.class));
             }
         });
+
+
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog = new ProgressDialog(getContext());
+                dialog.setCancelable(false);
+                dialog.setMessage("Đang đăng xuất...");
+                dialog.show();
                 StringRequest request = new StringRequest(Request.Method.GET,"https://zbiogg.com/api/logout", response -> {
                     try {
                         JSONObject object = new JSONObject(response);

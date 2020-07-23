@@ -22,6 +22,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/ln_no_notification"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_marginTop="80dp"
+                android:layout_gravity="center"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_block_noti"/>
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bạn không có thông báo nào!"
+                android:gravity="center"
+                android:textSize="20sp"/>
+        </LinearLayout>
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_view_notification"
             android:layout_width="match_parent"

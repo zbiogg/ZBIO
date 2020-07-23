@@ -30,6 +30,7 @@ import com.android.volley.toolbox.Volley;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+import com.tungkon.zbio.Adapter.PostsAdapter;
 import com.tungkon.zbio.Adapter.UserPostAdapter;
 import com.tungkon.zbio.Model.Post;
 import com.tungkon.zbio.R;
@@ -47,7 +48,8 @@ public class MyProfileActivity extends AppCompatActivity {
     private TextView txtFullName,txtgender,txtdob,txtcity,txtemail,txtphone,txtPostQty,txtLikeQty,txtCmtQty;
     private ArrayList<Post> arrayListUserPost;
     private SharedPreferences preferences;
-    private UserPostAdapter userPostAdapter;
+//    private UserPostAdapter userPostAdapter;
+    private PostsAdapter userPostAdapter;
     private RecyclerView recyclerView;
     private ShimmerFrameLayout shimmerFrameLayout;
     private LinearLayout lncity;
@@ -178,7 +180,7 @@ public class MyProfileActivity extends AppCompatActivity {
                     shimmerFrameLayout.stopShimmer();
                     layoutprofile.setVisibility(View.VISIBLE);
                     shimmerFrameLayout.setVisibility(View.GONE);
-                    userPostAdapter=new UserPostAdapter(getApplicationContext(),arrayListUserPost);
+                    userPostAdapter=new PostsAdapter(getApplicationContext(),arrayListUserPost);
                     recyclerView.setAdapter(userPostAdapter);
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setNestedScrollingEnabled(false);

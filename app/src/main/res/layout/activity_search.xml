@@ -37,6 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/bgshimmer"/>
+
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view_search"
         android:layout_width="match_parent"

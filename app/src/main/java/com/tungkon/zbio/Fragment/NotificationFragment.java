@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -49,6 +50,7 @@ public class NotificationFragment extends Fragment {
     SharedPreferences preferences;
     ShimmerFrameLayout shimmerFrameLayout;
     SwipeRefreshLayout swpie_notification_layout;
+    LinearLayout ln_no_notification;
     int page=2;
     public NotificationFragment() {
         // Required empty public constructor
@@ -60,6 +62,7 @@ public class NotificationFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_notification, container, false);
         // Inflate the layout for this fragment
+        ln_no_notification = view.findViewById(R.id.ln_no_notification);
         shimmerFrameLayout = view.findViewById(R.id.shimmer_view_notification);
         swpie_notification_layout = view.findViewById(R.id.swpie_notification_layout);
         swpie_notification_layout.setColorSchemeColors(Color.parseColor("#6fbe44"));
@@ -114,6 +117,9 @@ public class NotificationFragment extends Fragment {
                         Notification notification = new Gson().fromJson(notis.get(i).toString(), Notification.class);
                         notificationArrayList.add(notification);
                     }
+                    if(notis.length()==0){
+                        ln_no_notification.setVisibility(View.VISIBLE);
+                    }
                     notificationAdapter = new NotificationAdapter(getContext(),notificationArrayList);
                     recyclerView.setAdapter(notificationAdapter);
                     notificationAdapter.notifyDataSetChanged();
@@ -153,6 +159,7 @@ public class NotificationFragment extends Fragment {
                         notificationAdapter.notifyItemRangeInserted(notificationArrayList.size(),notis.length());
                         page++;
                     }else{
+
                         Toast.makeText(getContext(),"Bạn đã xem hết thông báo!",Toast.LENGTH_LONG).show();
                     }
 

@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <LinearLayout
+                android:foreground="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:id="@+id/lnviewprofile"
                 android:padding="10dp"
@@ -72,6 +73,7 @@
 
             </LinearLayout>
             <LinearLayout
+                android:foreground="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:id="@+id/ln_view_about_us"
                 android:padding="10dp"
@@ -126,6 +128,7 @@
             <Button
                 android:id="@+id/btnlogout"
                 android:background="@drawable/button_register_background"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_width="200dp"

@@ -80,6 +80,10 @@ public class MenuItemActivity extends AppCompatActivity {
         btnlogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog = new ProgressDialog(getApplicationContext());
+                dialog.setCancelable(false);
+                dialog.setMessage("Đang đăng xuất...");
+                dialog.show();
                 StringRequest request = new StringRequest(Request.Method.GET,"https://zbiogg.com/api/logout", response -> {
                     try {
                         JSONObject object = new JSONObject(response);

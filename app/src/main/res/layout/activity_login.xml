@@ -28,6 +28,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true">
     <com.google.android.material.textfield.TextInputEditText
+        android:layout_marginHorizontal="15dp"
         android:id="@+id/edit_login_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,6 +48,7 @@
         app:passwordToggleEnabled="true"
         >
         <com.google.android.material.textfield.TextInputEditText
+            android:layout_marginHorizontal="15dp"
             android:id="@+id/edit_login_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,6 +62,14 @@
 
 
     <Button
+        android:layout_marginHorizontal="15dp"
+        android:elevation="0dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:fontFamily="@font/lora"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:textColor="#453E3E"
         android:layout_marginTop="30dp"
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
@@ -67,7 +77,7 @@
         android:layout_below="@id/passwordinfo"
         android:layout_centerHorizontal="true"
         android:background="@drawable/button_login_background"
-        android:ems="15"
+        android:ems="16"
         android:text="Đăng nhập" />
 
     <LinearLayout
@@ -104,13 +114,22 @@
     </LinearLayout>
 
     <Button
+        android:elevation="0dp"
+        android:foreground="?android:attr/selectableItemBackground"
         android:id="@+id/btn_register"
         android:text="Tạo tài khoản "
         android:layout_alignParentBottom="true"
-        android:layout_width="250dp"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/lora"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:textColor="#504A4A"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
+        android:layout_marginHorizontal="15dp"
+        android:ems="16"
         android:background="@drawable/button_register_background"
 
 
