@@ -349,8 +349,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                                 try {
                                     JSONObject object = new JSONObject(response);
                                     if(object.getBoolean("success")){
-//                                        postArrayList.remove(position);
-                                        notifyItemRemoved(position);
+                                        holder.itemView.setVisibility(View.GONE);
+                                        ViewGroup.LayoutParams params=holder.itemView.getLayoutParams();
+                                        params.height=0;
+                                        holder.itemView.setLayoutParams(params);
                                         Toast.makeText(context, "Đã xóa bài viết", Toast.LENGTH_LONG).show();
 
                                     }

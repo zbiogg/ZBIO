@@ -17,7 +17,6 @@
 
         </ImageView>
         <LinearLayout
-            android:id="@+id/frameavt"
             android:layout_width="wrap_content"
             android:layout_height="120dp"
             android:orientation="horizontal"
@@ -224,7 +223,6 @@
                         android:layout_height="match_parent"
                         android:textSize="16sp"/>
                     <TextView
-                        android:id="@+id/txtcity"
                         android:gravity="center_vertical"
                         android:paddingHorizontal="5dp"
                         android:layout_width="match_parent"

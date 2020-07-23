@@ -210,7 +210,7 @@
                         >
                         <Button
                             android:id="@+id/btnEditInfo"
-                            android:background="@null"
+                            android:background="?android:attr/selectableItemBackground"
                             android:paddingHorizontal="50dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

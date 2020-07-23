@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,10 +54,19 @@ public class MyProfileActivity extends AppCompatActivity {
     private SwipeRefreshLayout swiperf_profile;
     private RelativeLayout layoutprofile;
     private ImageButton btnback,btn_search_toolbar;
+    private Button btn_edit_info;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
+        btn_edit_info = findViewById(R.id.btnEditInfo);
+        btn_edit_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),EditInfoActivity.class);
+                startActivity(i);
+            }
+        });
         btnback = findViewById(R.id.btnback);
         btnback.setOnClickListener(new View.OnClickListener() {
             @Override

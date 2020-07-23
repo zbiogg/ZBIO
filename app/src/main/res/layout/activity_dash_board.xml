@@ -37,21 +37,24 @@
             android:layout_gravity="right"
             android:layout_height="match_parent">
             <ImageButton
+                android:layout_marginHorizontal="10dp"
                 android:id="@+id/btn_search_toolbar"
-                android:background="@drawable/selector_oval"
-                android:padding="10dp"
+                android:background="@drawable/oval_backgrond_item"
+                android:foreground="?android:attr/actionBarItemBackground"
+                android:padding="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_search_black_24dp"
+                android:src="@drawable/ic_search"
                 />
             <ImageButton
                 android:id="@+id/btn_menu_item"
-                android:background="@drawable/selector_oval"
+                android:foreground="?android:attr/actionBarItemBackground"
+                android:background="@drawable/oval_backgrond_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:src="@drawable/ic_view_headline_black_24dp"
-                />
+                android:padding="8dp"
+                android:src="@drawable/ic_blackberry_messenger">
+            </ImageButton>
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
