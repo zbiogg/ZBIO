@@ -41,6 +41,7 @@ import com.tungkon.zbio.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +50,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -59,6 +63,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     ArrayList<Post> postArrayList;
     LinearLayout lnfirst,lnnormal;
     SharedPreferences preferences;
+    Socket socket;
 
     public PostsAdapter(Context context, ArrayList<Post> postArrayList) {
         this.context = context;
@@ -238,6 +243,29 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                                     holder.txt_likes.getLayoutParams().height= (int) (35*context.getResources().getDisplayMetrics().density);;
                                     holder.txt_likes.setLayoutParams(holder.txt_likes.getLayoutParams());
                                     holder.txt_likes.setText(like_qty+"");
+                                    try {
+                                        socket = IO.socket("http://chatzbio.herokuapp.com/");
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
+
+                                    }
+                                    socket.connect();
+                                    JSONObject obj = new JSONObject();
+                                    try {
+                                        obj.put("receiverID",object.getInt("post_userID"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    try {
+                                        obj.put("notiID", object.getInt("notiID") );
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+//                            Log.d("zzzzzzzz",object.getInt("post_userID")+"===="+preferences.getInt("id",0));
+                                    if(object.getInt("post_userID")!=preferences.getInt("id",0)) {
+                                        socket.emit("client_send_noti", obj);
+                                    }
                                 }else{
                                     if(like_qty==0){
                                         holder.txt_likes.getLayoutParams().height = 0;

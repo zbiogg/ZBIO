@@ -4,11 +4,13 @@ import android.annotation.TargetApi;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
@@ -34,8 +36,10 @@ import com.tungkon.zbio.Fragment.MenuFragment;
 import com.tungkon.zbio.Model.Notification;
 import com.tungkon.zbio.R;
 import com.tungkon.zbio.Fragment.RqFriendFragment;
+import com.tungkon.zbio.Service.BgServIce;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,7 +65,7 @@ import io.socket.emitter.Emitter;
 public class DashBoardActivity extends AppCompatActivity {
     ActionBar actionBar;
     Context context;
-    FragmentManager fragmentManager;
+    public static FragmentManager fragmentManager;
     Toolbar toolbar;
     TextView txtTitleToolbar;
     SharedPreferences preferences;
@@ -75,7 +79,6 @@ public class DashBoardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
-
         FloatingActionButton btnewpost;
         btnewpost = findViewById(R.id.btn_newpost);
         preferences = getSharedPreferences("user",MODE_PRIVATE);
@@ -242,12 +245,12 @@ public class DashBoardActivity extends AppCompatActivity {
                                     Fragment notifrm = fragmentManager.findFragmentByTag("frmnotifications");
                                     show_Notification();
                                     if(notifrm!=null){
-                                        Toast.makeText(getApplicationContext(),"Roi",Toast.LENGTH_LONG).show();
+//                                        Toast.makeText(getApplicationContext(),"Roi",Toast.LENGTH_LONG).show();
                                         NotificationFragment.notificationArrayList.add(0,notification);
 //                                        NotificationFragment.notificationAdapter.notifyItemInserted(0);
                                         NotificationFragment.notificationAdapter.notifyDataSetChanged();
                                     }else{
-                                        Toast.makeText(getApplicationContext(),"chua",Toast.LENGTH_LONG).show();
+//                                        Toast.makeText(getApplicationContext(),"chua",Toast.LENGTH_LONG).show();
                                     }
 
                                 }
@@ -309,7 +312,8 @@ public void show_Notification(){
             .setContentIntent(pendingIntent)
             .addAction(android.R.drawable.sym_action_chat,"Thông báo!",pendingIntent)
             .setChannelId(CHANNEL_ID)
-            .setSmallIcon(R.drawable.logo)
+            .setSmallIcon(R.drawable.logo).
+            setAutoCancel(true)
             .build();
     NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     notificationManager.createNotificationChannel(notificationChannel);
@@ -317,4 +321,5 @@ public void show_Notification(){
 
 
 }
+
 }

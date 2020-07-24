@@ -3,7 +3,7 @@
     package="com.tungkon.zbio">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".Service.BgServIce"></service>
         <activity android:name=".Activity.DetailMessengerActivity"></activity>
         <activity android:name=".Activity.MessengerActivity" />
         <activity android:name=".Activity.EditAccountActivity" />

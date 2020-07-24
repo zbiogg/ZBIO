@@ -39,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,6 +48,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
 public class DetailCmtActivity extends AppCompatActivity {
     ImageView imgUserCmtAvt,imgUserCurrent;
@@ -59,6 +63,7 @@ public class DetailCmtActivity extends AppCompatActivity {
     ReplyCmtAdapter replyCmtAdapter;
     NestedScrollView scroll_detailcmt;
     SwipeRefreshLayout swpie_detailcmt_layout;
+    Socket socket;
     public  static EditText editText_rep_cmt;
     public  static InputMethodManager imm;
     @Override
@@ -156,6 +161,29 @@ public class DetailCmtActivity extends AppCompatActivity {
 //                            ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
 //                                    .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                             recyclerView.scrollToPosition(replyCmtAdapter.getItemCount()-1);
+                            try {
+                                socket = IO.socket("http://chatzbio.herokuapp.com/");
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+
+                            }
+                            socket.connect();
+                            JSONObject obj = new JSONObject();
+                            try {
+                                obj.put("receiverID",object.getInt("cmt_userID"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                obj.put("notiID", object.getInt("notiID") );
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+//                            Log.d("zzzzzzzz",object.getInt("post_userID")+"===="+preferences.getInt("id",0));
+                            if(object.getInt("cmt_userID")!=preferences.getInt("id",0)) {
+                                socket.emit("client_send_noti", obj);
+                            }
                             scroll_detailcmt.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
