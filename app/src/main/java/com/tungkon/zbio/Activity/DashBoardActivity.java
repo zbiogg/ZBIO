@@ -1,8 +1,13 @@
 package com.tungkon.zbio.Activity;
 
+import android.annotation.TargetApi;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -31,9 +36,11 @@ import com.tungkon.zbio.R;
 import com.tungkon.zbio.Fragment.RqFriendFragment;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -60,14 +67,18 @@ public class DashBoardActivity extends AppCompatActivity {
     SharedPreferences preferences;
     ImageView imgLogoToolBar;
     ImageButton btn_mess,btn_search;
+    String [] postIDlink,cmtIDlink;
+    String senderUserName,send_message;
     private Socket socket;
     public static BottomNavigationView navView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
+
         FloatingActionButton btnewpost;
         btnewpost = findViewById(R.id.btn_newpost);
+        preferences = getSharedPreferences("user",MODE_PRIVATE);
         toolbar = findViewById(R.id.toolbar_dashboard);
         txtTitleToolbar = toolbar.findViewById(R.id.txtTitleToolbar);
         imgLogoToolBar = toolbar.findViewById(R.id.imgLogoToolbar);
@@ -85,7 +96,6 @@ public class DashBoardActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), SearchActivity.class));
             }
         });
-        preferences = getSharedPreferences("user",MODE_PRIVATE);
         //Bottom Navigation
          navView= findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(selectedListener);
@@ -108,14 +118,15 @@ public class DashBoardActivity extends AppCompatActivity {
 
     public BottomNavigationView.OnNavigationItemSelectedListener selectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        Fragment menu;
-        Fragment friends;
-        Fragment notifications;
+        public  Fragment menu;
+        public Fragment friends;
+        public Fragment notifications;
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             menu = fragmentManager.findFragmentByTag("frmmenu");
             friends = fragmentManager.findFragmentByTag("frmfriends");
             notifications = fragmentManager.findFragmentByTag("frmnotifications");
+
             switch (menuItem.getItemId()){
                 case R.id.nav_home:
                     if(notifications!=null){
@@ -172,6 +183,7 @@ public class DashBoardActivity extends AppCompatActivity {
                         txtTitleToolbar.setText("Thông báo");
                         fragmentManager.beginTransaction().add(R.id.content,new NotificationFragment(),"frmnotifications").commit();
                     }
+
                     return true;
                 case R.id.nav_menu:
                     fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("frmhome")).commit();
@@ -222,12 +234,22 @@ public class DashBoardActivity extends AppCompatActivity {
                                 JSONObject object1 = new JSONObject(response);
                                 if(object1.getBoolean("success")){
                                     JSONArray notis = object1.getJSONArray("noti");
-
                                     Notification notification = new Gson().fromJson(notis.get(0).toString(), Notification.class);
-                                    Log.d("cmmmmmmmm",notification.getSenderFullname());
-                                    NotificationFragment.notificationArrayList.add(0,notification);
-//                                    NotificationFragment.notificationAdapter.notifyItemInserted(0);
-                                    NotificationFragment.notificationAdapter.notifyItemRangeChanged(0,NotificationFragment.notificationArrayList.size());
+                                    cmtIDlink = notification.getUrl().split("\\?cmtID=");
+                                    postIDlink = notification.getUrl().split("\\/");
+                                    senderUserName=notification.getSenderFullname();
+                                    send_message=notification.getMessage();
+                                    Fragment notifrm = fragmentManager.findFragmentByTag("frmnotifications");
+                                    show_Notification();
+                                    if(notifrm!=null){
+                                        Toast.makeText(getApplicationContext(),"Roi",Toast.LENGTH_LONG).show();
+                                        NotificationFragment.notificationArrayList.add(0,notification);
+//                                        NotificationFragment.notificationAdapter.notifyItemInserted(0);
+                                        NotificationFragment.notificationAdapter.notifyDataSetChanged();
+                                    }else{
+                                        Toast.makeText(getApplicationContext(),"chua",Toast.LENGTH_LONG).show();
+                                    }
+
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -245,7 +267,7 @@ public class DashBoardActivity extends AppCompatActivity {
                         };
                         RequestQueue queue1 = Volley.newRequestQueue(getApplicationContext());
                         queue1.add(request1);
-                        Toast.makeText(getApplicationContext(),"thong bao vua nhan: "+notiID,Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(),"thong bao vua nhan: "+notiID,Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -262,5 +284,37 @@ public class DashBoardActivity extends AppCompatActivity {
 //            home.onActivityResult(2,resultCode,data);
 //        }
 //    }
+@TargetApi(Build.VERSION_CODES.O)
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 
+public void show_Notification(){
+    Intent intent;
+    if(cmtIDlink.length>1){
+        int cmtID = Integer.parseInt(cmtIDlink[1]);
+        intent = new Intent(getApplicationContext(), DetailCmtActivity.class);
+        intent.putExtra("cmtID",cmtID);
+    }
+    else{
+        int postID = Integer.parseInt(postIDlink[1]);
+         intent = new Intent(getApplicationContext(), DetailPostActivity.class);
+        intent.putExtra("postID",postID);
+    }
+
+    String CHANNEL_ID="MYCHANNEL";
+    NotificationChannel notificationChannel=new NotificationChannel(CHANNEL_ID,"name",NotificationManager.IMPORTANCE_LOW);
+    PendingIntent pendingIntent= PendingIntent.getActivity(getApplicationContext(),1,intent,0);
+    android.app.Notification notification=new android.app.Notification.Builder(getApplicationContext(),CHANNEL_ID)
+            .setContentText(senderUserName+""+send_message)
+            .setContentTitle("Chào! "+preferences.getString("firstName",""))
+            .setContentIntent(pendingIntent)
+            .addAction(android.R.drawable.sym_action_chat,"Thông báo!",pendingIntent)
+            .setChannelId(CHANNEL_ID)
+            .setSmallIcon(R.drawable.logo)
+            .build();
+    NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    notificationManager.createNotificationChannel(notificationChannel);
+    notificationManager.notify(1,notification);
+
+
+}
 }
