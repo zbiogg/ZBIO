@@ -35,23 +35,29 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class NotificationFragment extends Fragment {
-    RecyclerView recyclerView;
-    NotificationAdapter notificationAdapter;
-    ArrayList<Notification> notificationArrayList;
+    public static RecyclerView recyclerView;
+    public static NotificationAdapter notificationAdapter;
+    public static ArrayList<Notification> notificationArrayList;
     SharedPreferences preferences;
     ShimmerFrameLayout shimmerFrameLayout;
     SwipeRefreshLayout swpie_notification_layout;
     LinearLayout ln_no_notification;
     int page=2;
+    private Socket socket;
     public NotificationFragment() {
         // Required empty public constructor
     }
@@ -62,6 +68,7 @@ public class NotificationFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_notification, container, false);
         // Inflate the layout for this fragment
+        realtimeNoti();
         ln_no_notification = view.findViewById(R.id.ln_no_notification);
         shimmerFrameLayout = view.findViewById(R.id.shimmer_view_notification);
         swpie_notification_layout = view.findViewById(R.id.swpie_notification_layout);
@@ -183,4 +190,44 @@ public class NotificationFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(getContext());
         queue.add(request);
     }
+    public void realtimeNoti(){
+        try {
+            socket = IO.socket("http://chatzbio.herokuapp.com/");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(),"catch",Toast.LENGTH_LONG).show();
+        }
+
+        socket.connect();
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("romID", 1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            obj.put("message", "chao ban" );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        socket.emit("client_send_roomID", obj);
+        socket.on("server_send_noti",onDataGetNoti);
+    }
+    private Emitter.Listener onDataGetNoti = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject object =(JSONObject) args[0];
+                    try {
+                        Integer notiID =object.getInt("notiID");
+                        Toast.makeText(getContext(),notiID,Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
 }

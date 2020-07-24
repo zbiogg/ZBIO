@@ -46,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,6 +55,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
 public class DetailPostActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -70,6 +74,7 @@ public class DetailPostActivity extends AppCompatActivity {
     int postID = 0;
     int post_liked=0;
     NestedScrollView scroll_postdetail;
+    private Socket socket;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -361,13 +366,37 @@ public class DetailPostActivity extends AppCompatActivity {
                             Log.d("cmtnew",object+"");
                             JSONArray newcmt = object.getJSONArray("cmt");
                             Cmt cmt = new Gson().fromJson(newcmt.get(0).toString(),Cmt.class);
-                            Log.d("kaka123",arrayListCmt+"");
+                            int notiID=object.getInt("notiID");
+                            Log.d("kaka123",notiID+"");
                             arrayListCmt.add(cmt);
                             cmtAdapter.notifyItemInserted(cmtAdapter.getItemCount()-1);
                             edit_cmt_content.setText("");
 //                            ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
 //                                    .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                             recyclerView.scrollToPosition(cmtAdapter.getItemCount()-1);
+                            try {
+                                socket = IO.socket("http://chatzbio.herokuapp.com/");
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+
+                            }
+                            socket.connect();
+                            JSONObject obj = new JSONObject();
+                            try {
+                                obj.put("receiverID",object.getInt("post_userID"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                obj.put("notiID", notiID );
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            Log.d("zzzzzzzz",object.getInt("post_userID")+"===="+preferences.getInt("id",0));
+                            if(object.getInt("post_userID")!=preferences.getInt("id",0)) {
+                                socket.emit("client_send_noti", obj);
+                            }
                             scroll_postdetail.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {

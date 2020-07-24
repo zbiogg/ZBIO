@@ -4,19 +4,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.tungkon.zbio.Adapter.NotificationAdapter;
 import com.tungkon.zbio.Fragment.HomeFragment;
 import com.tungkon.zbio.Fragment.NotificationFragment;
 import com.tungkon.zbio.Fragment.MenuFragment;
+import com.tungkon.zbio.Model.Notification;
 import com.tungkon.zbio.R;
 import com.tungkon.zbio.Fragment.RqFriendFragment;
 
@@ -27,6 +37,19 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+
 
 public class DashBoardActivity extends AppCompatActivity {
     ActionBar actionBar;
@@ -36,7 +59,8 @@ public class DashBoardActivity extends AppCompatActivity {
     TextView txtTitleToolbar;
     SharedPreferences preferences;
     ImageView imgLogoToolBar;
-    ImageButton btn_menu,btn_search;
+    ImageButton btn_mess,btn_search;
+    private Socket socket;
     public static BottomNavigationView navView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +71,11 @@ public class DashBoardActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar_dashboard);
         txtTitleToolbar = toolbar.findViewById(R.id.txtTitleToolbar);
         imgLogoToolBar = toolbar.findViewById(R.id.imgLogoToolbar);
-        btn_menu = toolbar.findViewById(R.id.btn_menu_item);
-        btn_menu.setOnClickListener(new View.OnClickListener() {
+        btn_mess = toolbar.findViewById(R.id.btn_menu_item);
+        btn_mess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashBoardActivity.this,MenuItemActivity.class));
+                startActivity(new Intent(DashBoardActivity.this,MessengerActivity.class));
             }
         });
         btn_search = toolbar.findViewById(R.id.btn_search_toolbar);
@@ -77,6 +101,8 @@ public class DashBoardActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(),CreatePost.class));
             }
         });
+        realtimeNoti();
+
 
     }
 
@@ -171,6 +197,62 @@ public class DashBoardActivity extends AppCompatActivity {
             return false;
         }
     };
+    public void realtimeNoti(){
+        try {
+            socket = IO.socket("http://chatzbio.herokuapp.com/");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        socket.connect();
+        socket.emit("noti_client_id",preferences.getInt("id",0));
+        socket.on("server_send_noti",onDataGetNoti);
+
+    }
+    private Emitter.Listener onDataGetNoti = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject object =(JSONObject) args[0];
+                    try {
+                        Integer notiID =object.getInt("notiID");
+                        StringRequest request1 = new StringRequest(Request.Method.GET,"https://zbiogg.com/api/showNoti?notiID="+notiID,response -> {
+                            try {
+                                JSONObject object1 = new JSONObject(response);
+                                if(object1.getBoolean("success")){
+                                    JSONArray notis = object1.getJSONArray("noti");
+
+                                    Notification notification = new Gson().fromJson(notis.get(0).toString(), Notification.class);
+                                    Log.d("cmmmmmmmm",notification.getSenderFullname());
+                                    NotificationFragment.notificationArrayList.add(0,notification);
+//                                    NotificationFragment.notificationAdapter.notifyItemInserted(0);
+                                    NotificationFragment.notificationAdapter.notifyItemRangeChanged(0,NotificationFragment.notificationArrayList.size());
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        },error -> {
+                            error.printStackTrace();
+                        }){
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                String token = preferences.getString("token","");
+                                HashMap<String,String> map = new HashMap<>();
+                                map.put("Authorization","Bearer "+token);
+                                return map;
+                            }
+                        };
+                        RequestQueue queue1 = Volley.newRequestQueue(getApplicationContext());
+                        queue1.add(request1);
+                        Toast.makeText(getApplicationContext(),"thong bao vua nhan: "+notiID,Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
 
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -180,4 +262,5 @@ public class DashBoardActivity extends AppCompatActivity {
 //            home.onActivityResult(2,resultCode,data);
 //        }
 //    }
+
 }

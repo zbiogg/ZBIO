@@ -252,7 +252,7 @@ public class ViewProfileActivity extends AppCompatActivity {
                     btn_go_to_message.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getApplicationContext(),"hihi",Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),DetailMessengerActivity.class));
                         }
                     });
                     btn_more.setOnClickListener(new View.OnClickListener() {

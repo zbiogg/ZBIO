@@ -3,7 +3,6 @@ package com.tungkon.zbio.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
-import com.tungkon.zbio.Activity.DetailMessageActivity;
+import com.tungkon.zbio.Activity.DetailMessengerActivity;
 import com.tungkon.zbio.Activity.ViewProfileActivity;
 import com.tungkon.zbio.Model.User;
 import com.tungkon.zbio.R;
@@ -102,7 +100,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
         holder.btn_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(context, DetailMessageActivity.class);
+                Intent i = new Intent(context, DetailMessengerActivity.class);
                 i.putExtra("userID",user.getId());
                 context.startActivity(i);
             }
