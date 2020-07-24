@@ -65,7 +65,7 @@ import static android.content.Context.MODE_PRIVATE;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-    ImageView imgUserAvt;
+    public static ImageView imgUserAvt;
     Button btn_pick_camera, btn_add_image;
     public static ShimmerFrameLayout shimmerFrameLayout;
     public static RecyclerView recyclerView;

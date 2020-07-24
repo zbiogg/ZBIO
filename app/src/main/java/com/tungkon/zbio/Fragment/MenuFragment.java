@@ -53,7 +53,7 @@ public class MenuFragment extends Fragment {
     private SharedPreferences preferences;
     private LinearLayout ln_view_profile,lnviewaboutus;
     private Button btn_logout;
-    private  ImageView imgUserAvt;
+    public static   ImageView imgUserAvt;
     private  TextView txtUserName;
     private ProgressDialog dialog;
     public MenuFragment() {

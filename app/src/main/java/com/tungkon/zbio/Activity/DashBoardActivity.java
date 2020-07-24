@@ -5,14 +5,18 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -26,6 +30,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenu;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -67,12 +76,16 @@ public class DashBoardActivity extends AppCompatActivity {
     Context context;
     public static FragmentManager fragmentManager;
     Toolbar toolbar;
-    TextView txtTitleToolbar;
+    TextView txtTitleToolbar, bagde_noti ;
     SharedPreferences preferences;
     ImageView imgLogoToolBar;
     ImageButton btn_mess,btn_search;
     String [] postIDlink,cmtIDlink;
     String senderUserName,send_message;
+    BottomNavigationMenuView bottomNavigationMenuView;
+    BottomNavigationItemView item_noti;
+    View badge;
+    private static int noti_Qty=0;
     private Socket socket;
     public static BottomNavigationView navView;
     @Override
@@ -101,7 +114,14 @@ public class DashBoardActivity extends AppCompatActivity {
         });
         //Bottom Navigation
          navView= findViewById(R.id.nav_view);
-        navView.setOnNavigationItemSelectedListener(selectedListener);
+         navView.setOnNavigationItemSelectedListener(selectedListener);
+         bottomNavigationMenuView = (BottomNavigationMenuView) navView.getChildAt(0);
+        View v1 = bottomNavigationMenuView.getChildAt(3);
+        item_noti = (BottomNavigationItemView) v1;
+        badge = LayoutInflater.from(this)
+                .inflate(R.layout.badge_noti_layout, bottomNavigationMenuView, false);
+        bagde_noti = badge.findViewById(R.id.notification_badge);
+        bagde_noti.setVisibility(View.GONE);
         fragmentManager = getSupportFragmentManager();
         //Fragment mặc định
         txtTitleToolbar.setTextSize(TypedValue.COMPLEX_UNIT_SP,22f);
@@ -115,6 +135,7 @@ public class DashBoardActivity extends AppCompatActivity {
             }
         });
         realtimeNoti();
+        getNoti();
 
 
     }
@@ -291,6 +312,12 @@ public class DashBoardActivity extends AppCompatActivity {
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 
 public void show_Notification(){
+    noti_Qty++;
+    if(noti_Qty>99){
+    bagde_noti.setText("99+");
+    }else {
+        bagde_noti.setText(noti_Qty+"");
+    }
     Intent intent;
     if(cmtIDlink.length>1){
         int cmtID = Integer.parseInt(cmtIDlink[1]);
@@ -315,11 +342,57 @@ public void show_Notification(){
             .setSmallIcon(R.drawable.logo).
             setAutoCancel(true)
             .build();
+    notification.sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"+getPackageName() + "/" + R.raw.messenger);//Here is FILE_NAME is the name of file that you want to play
+    notification.defaults |= android.app.Notification.DEFAULT_VIBRATE;
+    MediaPlayer mp = MediaPlayer. create (getApplicationContext(), notification.sound);
+    mp.start();
     NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     notificationManager.createNotificationChannel(notificationChannel);
     notificationManager.notify(1,notification);
 
 
+
 }
+    public void getNoti(){
+        StringRequest request = new StringRequest(Request.Method.GET,"https://zbiogg.com/api/getNotiUnReader",response -> {
+            try {
+                JSONObject object = new JSONObject(response);
+                if(object.getBoolean("success")){
+//                    JSONArray notis = object.getJSONArray("notifications");
+//                    for(int i=0;i<notis.length();i++){
+//                        Notification notification = new Gson().fromJson(notis.get(i).toString(), Notification.class);
+//                        if(notification.getStatus()==0){
+//                            noti_Qty++;
+//                        }
+//                    }
+                    noti_Qty=object.getInt("qty");
+                    if(noti_Qty>99){
+                        bagde_noti.setText("99+");
+                    }else {
+                        bagde_noti.setText(noti_Qty+"");
+                    }
+                    item_noti.addView(badge);
+                    bagde_noti.setVisibility(View.VISIBLE);
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        },error -> {
+            error.printStackTrace();
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                String token = preferences.getString("token","");
+                HashMap<String,String> map = new HashMap<>();
+                map.put("Authorization","Bearer "+token);
+                return map;
+            }
+
+
+        };
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        queue.add(request);
+    }
 
 }
