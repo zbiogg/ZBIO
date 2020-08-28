@@ -14,6 +14,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Vibrator;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -42,7 +44,10 @@ import com.tungkon.zbio.Adapter.NotificationAdapter;
 import com.tungkon.zbio.Fragment.HomeFragment;
 import com.tungkon.zbio.Fragment.NotificationFragment;
 import com.tungkon.zbio.Fragment.MenuFragment;
+import com.tungkon.zbio.Model.Message;
 import com.tungkon.zbio.Model.Notification;
+import com.tungkon.zbio.Model.Post;
+import com.tungkon.zbio.Model.User;
 import com.tungkon.zbio.R;
 import com.tungkon.zbio.Fragment.RqFriendFragment;
 import com.tungkon.zbio.Service.BgServIce;
@@ -54,6 +59,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -242,6 +248,7 @@ public class DashBoardActivity extends AppCompatActivity {
         socket.connect();
         socket.emit("noti_client_id",preferences.getInt("id",0));
         socket.on("server_send_noti",onDataGetNoti);
+        socket.on("server_send_message",onDataGetMess);
 
     }
     private Emitter.Listener onDataGetNoti = new Emitter.Listener() {
@@ -266,9 +273,7 @@ public class DashBoardActivity extends AppCompatActivity {
                                     Fragment notifrm = fragmentManager.findFragmentByTag("frmnotifications");
                                     show_Notification();
                                     if(notifrm!=null){
-//                                        Toast.makeText(getApplicationContext(),"Roi",Toast.LENGTH_LONG).show();
                                         NotificationFragment.notificationArrayList.add(0,notification);
-//                                        NotificationFragment.notificationAdapter.notifyItemInserted(0);
                                         NotificationFragment.notificationAdapter.notifyDataSetChanged();
                                     }else{
 //                                        Toast.makeText(getApplicationContext(),"chua",Toast.LENGTH_LONG).show();
@@ -299,7 +304,57 @@ public class DashBoardActivity extends AppCompatActivity {
             });
         }
     };
+     private  Emitter.Listener onDataGetMess = new Emitter.Listener() {
+         @Override
+         public void call(Object... args) {
+             runOnUiThread(new Runnable() {
+                 @Override
+                 public void run() {
+                     JSONObject object =(JSONObject) args[0];
+                     try {
 
+
+                             Log.d("messsss", object.getString("fromID") + "");
+                             StringRequest request = new StringRequest(Request.Method.GET, "https://zbiogg.com/api/detailmess/" + object.getString("messID"), response -> {
+                                 try {
+                                     JSONObject objectmess = new JSONObject(response);
+                                     if (objectmess.getBoolean("success")) {
+                                         JSONArray messArray = objectmess.getJSONArray("mess");
+                                         JSONObject userObj = objectmess.getJSONObject("from_user");
+                                         Message messdetail = new Gson().fromJson(messArray.get(0).toString(), Message.class);
+                                         show_Noti_Message(object.getInt("fromID"),userObj.getString("firstName"),messdetail.getMessage());
+                                         if(object.getInt("fromID")==DetailMessengerActivity.userID) {
+                                             DetailMessengerActivity.messageArrayList.add(messdetail);
+                                             DetailMessengerActivity.detailMessageAdapter.notifyItemInserted(DetailMessengerActivity.messageArrayList.size() - 1);
+                                             DetailMessengerActivity.recyclerView.scrollToPosition(DetailMessengerActivity.messageArrayList.size() - 1);
+                                         }
+                                     }
+
+                                 } catch (JSONException e) {
+                                     e.printStackTrace();
+                                 }
+                             }, error -> {
+
+                             }) {
+                                 @Override
+                                 public Map<String, String> getHeaders() throws AuthFailureError {
+                                     String token = preferences.getString("token", "");
+                                     HashMap<String, String> map = new HashMap<>();
+                                     map.put("Authorization", "Bearer " + token);
+                                     return map;
+                                 }
+                             };
+                             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                             queue.add(request);
+
+                     } catch (JSONException e) {
+                         e.printStackTrace();
+                     }
+                 }
+
+             });
+         }
+     };
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
@@ -312,6 +367,7 @@ public class DashBoardActivity extends AppCompatActivity {
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 
 public void show_Notification(){
+    bagde_noti.setVisibility(View.VISIBLE);
     noti_Qty++;
     if(noti_Qty>99){
     bagde_noti.setText("99+");
@@ -330,26 +386,65 @@ public void show_Notification(){
         intent.putExtra("postID",postID);
     }
 
-    String CHANNEL_ID="MYCHANNEL";
-    NotificationChannel notificationChannel=new NotificationChannel(CHANNEL_ID,"name",NotificationManager.IMPORTANCE_LOW);
-    PendingIntent pendingIntent= PendingIntent.getActivity(getApplicationContext(),1,intent,0);
-    android.app.Notification notification=new android.app.Notification.Builder(getApplicationContext(),CHANNEL_ID)
+    String CHANNEL_ID="NOTIFICATION";
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    NotificationChannel notificationChannel=new NotificationChannel(CHANNEL_ID,"name",NotificationManager.IMPORTANCE_HIGH);
+    PendingIntent pendingIntent= PendingIntent.getActivity(getApplicationContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+    android.app.Notification notification=new NotificationCompat.Builder(getApplicationContext(),CHANNEL_ID)
             .setContentText(senderUserName+""+send_message)
             .setContentTitle("Chào! "+preferences.getString("firstName",""))
             .setContentIntent(pendingIntent)
+            .setWhen(System.currentTimeMillis())
+            .setShowWhen(true)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(android.app.Notification.CATEGORY_MESSAGE)
             .addAction(android.R.drawable.sym_action_chat,"Thông báo!",pendingIntent)
             .setChannelId(CHANNEL_ID)
             .setSmallIcon(R.drawable.logo).
             setAutoCancel(true)
             .build();
     notification.sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"+getPackageName() + "/" + R.raw.messenger);//Here is FILE_NAME is the name of file that you want to play
-    notification.defaults |= android.app.Notification.DEFAULT_VIBRATE;
     MediaPlayer mp = MediaPlayer. create (getApplicationContext(), notification.sound);
     mp.start();
-    NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+    v.vibrate(200);
+    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
     notificationManager.createNotificationChannel(notificationChannel);
     notificationManager.notify(1,notification);
 
+
+
+}
+@TargetApi(Build.VERSION_CODES.O)
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+public void show_Noti_Message(int userID,String name,String message){
+    Intent i = new Intent(getApplicationContext(),DetailMessengerActivity.class);
+    i.putExtra("userID",userID);
+    String CHANNEL_ID="MESSAGE";
+    NotificationChannel notificationChannel=new NotificationChannel(CHANNEL_ID,"name",NotificationManager.IMPORTANCE_HIGH);
+    PendingIntent pendingIntent= PendingIntent.getActivity(getApplicationContext(),2,i,0);
+    android.app.Notification notification=new NotificationCompat.Builder(getApplicationContext(),CHANNEL_ID)
+            .setContentText(name+" : "+message)
+            .setContentTitle("Bạn có tin nhắn mới!")
+            .setContentIntent(pendingIntent)
+            .setPriority(android.app.Notification.PRIORITY_MAX)
+            .setCategory(android.app.Notification.CATEGORY_MESSAGE)
+            .setWhen(System.currentTimeMillis())
+            .setShowWhen(true)
+            .addAction(android.R.drawable.sym_action_chat,"Tin nhắn!",pendingIntent)
+            .setChannelId(CHANNEL_ID)
+            .setSmallIcon(R.drawable.logo).
+                    setAutoCancel(true)
+            .build();
+    notification.sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"+getPackageName() + "/" + R.raw.messenger);//Here is FILE_NAME is the name of file that you want to play
+    MediaPlayer mp = MediaPlayer. create (getApplicationContext(), notification.sound);
+    mp.start();
+    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+    v.vibrate(200);
+////    NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+    notificationManager.createNotificationChannel(notificationChannel);
+    notificationManager.notify(2,notification);
 
 
 }
@@ -372,7 +467,9 @@ public void show_Notification(){
                         bagde_noti.setText(noti_Qty+"");
                     }
                     item_noti.addView(badge);
-                    bagde_noti.setVisibility(View.VISIBLE);
+                    if(noti_Qty!=0) {
+                        bagde_noti.setVisibility(View.VISIBLE);
+                    }
 
                 }
             } catch (JSONException e) {
